@@ -16,7 +16,7 @@ import android.view.ViewGroup
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
-
+//Augustine and tiger
 class MainActivity : AppCompatActivity() {
 
     /**
