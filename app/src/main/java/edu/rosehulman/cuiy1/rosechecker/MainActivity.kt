@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
      * may be best to switch to a
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
+    //Augustine
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
