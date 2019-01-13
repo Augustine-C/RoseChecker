@@ -5,4 +5,5 @@
     <string name="default_user_name">User Name</string>
     <string name="user_password">User Password</string>
     <string name="login_string">Login</string>
+    <string name="rosechecker">Rose Checker</string>
 </resources>

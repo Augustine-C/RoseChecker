@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="@color/colorBackgournd"
 >
+
     <EditText android:layout_width="200dp"
               android:layout_height="wrap_content"
-                android:id="@+id/user_name"
-                android:hint="@string/default_user_name"
+              android:id="@+id/user_name"
+              android:hint="@string/default_user_name"
               android:layout_centerInParent="true"
               android:background="@color/colorEditBackground"
+              android:shadowColor="@color/colorAccent"
+              android:shadowDx="3dp"
+
 
     />
     <EditText android:layout_width="200dp"
@@ -31,5 +36,32 @@
             android:textAppearance="@style/TextAppearance.AppCompat"
             android:textStyle="bold"
     />
+    <FrameLayout android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+    >
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/star"
+                android:layout_gravity="center"
+                android:id="@+id/star"
+        />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_gravity="center"
+                  android:text="@string/rosechecker"
+                  android:textStyle="bold"
+                  android:textSize="40sp"
+                  android:textColor="@android:color/black"
+                  android:shadowRadius="1.5"
+                  android:shadowDx="1"
+                  android:shadowDy="1"
+                  android:shadowColor="@color/colorRoseRed"
+        />
+
+    </FrameLayout>
+
+
 
 </RelativeLayout>
