@@ -2,4 +2,17 @@
     <string name="app_name">RoseChecker</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="default_user_name">User Name</string>
+    <string name="user_password">User Password</string>
+    <string name="login_string">Login</string>
+    <string name="rosechecker">Rose Checker</string>
+    <string name="date_time">Date</string>
+    <string name="event_name">Event Name</string>
+    <string name="time">Time</string>
+    <string name="location">location</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+    <string name="color">Color</string>
+    <string name="share">Share</string>
+    <string name="logout">Logout</string>
 </resources>
