@@ -10,4 +10,9 @@
     <string name="event_name">Event Name</string>
     <string name="time">Time</string>
     <string name="location">location</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+    <string name="color">Color</string>
+    <string name="share">Share</string>
+    <string name="logout">Logout</string>
 </resources>
