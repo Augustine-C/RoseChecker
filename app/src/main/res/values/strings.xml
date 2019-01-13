@@ -6,4 +6,5 @@
     <string name="user_password">User Password</string>
     <string name="login_string">Login</string>
     <string name="rosechecker">Rose Checker</string>
+    <string name="date_time">Date</string>
 </resources>
