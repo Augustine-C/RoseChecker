@@ -15,4 +15,11 @@
     <string name="color">Color</string>
     <string name="share">Share</string>
     <string name="logout">Logout</string>
+    <string name="title">Title</string>
+    <string name="new_course">Course Info</string>
+    <string name="starts">Starts</string>
+    <string name="ends">Ends</string>
+    <string name="courseid">CourseID</string>
+    <string name="keycontent">keyContent</string>
+    <string name="homework">Homework</string>
 </resources>

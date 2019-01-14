@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorEditBackground"
+>
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/new_course"
+              android:layout_centerHorizontal="true"
+              android:layout_marginTop="10dp"
+              android:id="@+id/new_course"
+              android:textSize="30sp"
+    />
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/courseid"
+              android:id="@+id/title"
+              android:textSize="24sp"
+              android:padding="10dp"
+              android:background="@android:color/white"
+              android:layout_below="@+id/new_course"
+    />
+
+    <EditText android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/location"
+              android:textSize="24sp"
+              android:id="@+id/location"
+              android:layout_below="@id/title"
+              android:padding="10dp"
+              android:background="@android:color/white"
+              android:layout_marginTop="5dp"
+    />
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/location"
+                  android:id="@+id/start"
+
+                  android:layout_marginTop="5dp"
+                  android:background="@android:color/white"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/starts"
+                  android:layout_weight="10"
+                  android:textSize="24sp"
+                  android:padding="10dp"
+
+        />
+        <EditText
+                android:layout_weight="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="datetime"
+                android:ems="10"
+                android:id="@+id/endTime"
+                android:textSize="24sp"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_below="@+id/start"
+                  android:id="@+id/end"
+                  android:layout_marginTop="5dp"
+                  android:background="@android:color/white"
+    >
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/ends"
+                  android:layout_weight="10"
+                  android:textSize="24sp"
+                  android:padding="10dp"
+
+        />
+        <EditText
+                android:layout_weight="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="datetime"
+                android:ems="10"
+                android:id="@+id/time"
+                android:textSize="24sp"
+        />
+
+    </LinearLayout>
+
+    <EditText android:layout_width="match_parent"
+              android:background="@android:color/white"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/end"
+              android:padding="10dp"
+              android:layout_marginTop="5dp"
+              android:textSize="24sp"
+              android:hint="@string/keycontent"
+              android:inputType="textMultiLine"
+              android:id="@+id/keycontent"
+    />
+    <EditText android:layout_width="match_parent"
+              android:background="@android:color/white"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/keycontent"
+              android:padding="10dp"
+              android:layout_marginTop="5dp"
+              android:textSize="24sp"
+              android:hint="@string/homework"
+              android:inputType="textMultiLine"
+    />
+
+
+
+
+</RelativeLayout>
