@@ -22,4 +22,8 @@
     <string name="courseid">CourseID</string>
     <string name="keycontent">keyContent</string>
     <string name="homework">Homework</string>
+    <string name="meeting_info">Meeting info</string>
+    <string name="meeting">Meeting</string>
+    <string name="meeting_agenda">Meeting agenda</string>
+    <string name="members">members</string>
 </resources>

@@ -6,20 +6,20 @@
 >
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/new_course"
+              android:text="@string/meeting_info"
               android:layout_centerHorizontal="true"
               android:layout_marginTop="10dp"
-              android:id="@+id/new_course"
+              android:id="@+id/new_meeting"
               android:textSize="30sp"
     />
     <EditText android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:hint="@string/courseid"
+              android:hint="@string/meeting"
               android:id="@+id/title"
               android:textSize="24sp"
               android:padding="10dp"
               android:background="@android:color/white"
-              android:layout_below="@+id/new_course"
+              android:layout_below="@+id/new_meeting"
     />
 
     <EditText android:layout_width="match_parent"
@@ -94,18 +94,18 @@
               android:padding="10dp"
               android:layout_marginTop="5dp"
               android:textSize="24sp"
-              android:hint="@string/keycontent"
+              android:hint="@string/meeting_agenda"
               android:inputType="textMultiLine"
-              android:id="@+id/keycontent"
+              android:id="@+id/meeting_agenda"
     />
     <EditText android:layout_width="match_parent"
               android:background="@android:color/white"
               android:layout_height="wrap_content"
-              android:layout_below="@+id/keycontent"
+              android:layout_below="@+id/meeting_agenda"
               android:padding="10dp"
               android:layout_marginTop="5dp"
               android:textSize="24sp"
-              android:hint="@string/homework"
+              android:hint="@string/members"
               android:inputType="textMultiLine"
     />
 
