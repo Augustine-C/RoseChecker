@@ -1,5 +1,6 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.net.Uri
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
@@ -17,7 +18,9 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 //Augustine and tiger
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity()
+                    ,LoginFragment.OnLoginListener{
+
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -41,7 +44,9 @@ class MainActivity : AppCompatActivity() {
 
         // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
-
+        val ft = supportFragmentManager.beginTransaction()
+        ft.add(R.id.fragment_contianer ,LoginFragment(),"")
+        ft.commit()
 //        fab.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show()
@@ -68,7 +73,12 @@ class MainActivity : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
-
+    override fun OnLoginListener(uri: Uri) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_contianer,ScheduleFragemnt(),"")
+        ft.addToBackStack("list")
+        ft.commit()
+    }
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
