@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1088170343881",
+    "firebase_url": "https://rosechecker-d621c.firebaseio.com",
+    "project_id": "rosechecker-d621c",
+    "storage_bucket": "rosechecker-d621c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088170343881:android:f391afa43177e4f3",
+        "android_client_info": {
+          "package_name": "edu.rosehulman.cuiy1.rosechecker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1088170343881-vm8o5tvlat3ci8mgilcmug9r8ja3feb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB53-PS5fPVtyx7EzGt566fv3LO3t1OCg4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
