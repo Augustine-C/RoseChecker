@@ -19,7 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
-                    ,LoginFragment.OnLoginListener{
+                    ,LoginFragment.OnLoginListener
+                    ,ScheduleFragemnt.OnClassSelectedListener{
 
 
     /**
@@ -37,15 +38,15 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setSupportActionBar(toolbar)
+        //setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
+        //mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
-        container.adapter = mSectionsPagerAdapter
+        //container.adapter = mSectionsPagerAdapter
         val ft = supportFragmentManager.beginTransaction()
-        ft.add(R.id.fragment_contianer ,LoginFragment(),"")
+        ft.replace(R.id.fragment_contianer ,LoginFragment(),"")
         ft.commit()
 //        fab.setOnClickListener { view ->
 //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -73,11 +74,15 @@ class MainActivity : AppCompatActivity()
 
         return super.onOptionsItemSelected(item)
     }
-    override fun OnLoginListener(uri: Uri) {
+    override fun OnLoginListener() {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer,ScheduleFragemnt(),"")
         ft.addToBackStack("list")
         ft.commit()
+    }
+
+    override fun OnClassSelectedListener(meetingEvent: MeetingEvent) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

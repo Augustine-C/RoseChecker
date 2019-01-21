@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.content_main.view.*
+import kotlinx.android.synthetic.main.login.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,6 +34,7 @@ class LoginFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
             param1 = it.getString(USER_NAME)
             param2 = it.getString(USER_PASSWORD)
@@ -42,15 +45,18 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return TextView(activity).apply {
-            return inflater.inflate(R.layout.login, fragment_contianer, false)
+        val view=inflater.inflate(R.layout.login, fragment_contianer, false)
+        view.login_button.setOnClickListener {
+            this.onButtonPressed()
         }
+        return view
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.OnLoginListener(uri)
+    fun onButtonPressed() {
+        listener?.OnLoginListener()
     }
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -79,7 +85,7 @@ class LoginFragment : Fragment() {
      */
     interface OnLoginListener {
         // TODO: Update argument type and name
-        fun OnLoginListener(uri: Uri)
+        fun OnLoginListener()
     }
 
     companion object {
