@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.add_course_event.view.*
+import java.text.DateFormat
+import java.util.*
 
 class ScheduleAdapter(var context:Context?
                       ,val listener: ScheduleFragemnt.OnEventSelectedListener
@@ -58,10 +60,10 @@ class ScheduleAdapter(var context:Context?
 
         builder.setPositiveButton(android.R.string.ok,{ _,_->
 
-            edit(position,caption,url)
+           // edit(position,caption,url)
         })
         builder.setNeutralButton("Remove"){ _, _ ->
-            remove(position)
+//            remove(position)
 
         }
         builder.create().show()
@@ -69,8 +71,13 @@ class ScheduleAdapter(var context:Context?
     fun add(event: Event){
         eventsRef.add(event)
     }
-    fun edit(){
-
+    fun edit(position: Int,name:String,location:String,startTime:DateFormat,endTime:DateFormat){
+        val event=events[position]
+        event.name=name
+        event.location=location
+        event.startTime=startTime
+        event.endTime=endTime
+        eventsRef.document(events[position].id).set(event)
     }
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
         holder.bind(events[position])
