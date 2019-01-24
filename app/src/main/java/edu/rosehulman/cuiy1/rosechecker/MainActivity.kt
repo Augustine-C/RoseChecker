@@ -9,8 +9,7 @@ import android.view.MenuItem
 
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
-                    ,LoginFragment.OnLoginListener
-                    ,ScheduleFragemnt.OnEventSelectedListener{
+    , LoginFragment.OnLoginListener {
 
 
     /**
@@ -28,7 +27,7 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer ,LoginFragment(),"login")
+        ft.replace(R.id.fragment_contianer, LoginFragment(), "login")
         ft.commit()
     }
 
@@ -51,15 +50,12 @@ class MainActivity : AppCompatActivity()
 
         return super.onOptionsItemSelected(item)
     }
+
     override fun OnLoginListener() {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer,ScheduleFragemnt(),"schedule")
+        ft.replace(R.id.fragment_contianer, ScheduleFragemnt(), "schedule")
         ft.addToBackStack("list")
         ft.commit()
-    }
-
-    override fun onEventSelected(event: Event) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

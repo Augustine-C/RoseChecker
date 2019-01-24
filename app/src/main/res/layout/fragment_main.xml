@@ -13,6 +13,16 @@
             android:background="@color/colorRoseRed"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/buttons"
+            android:layout_alignParentRight="true"
+            android:layout_margin="20dp"
+            app:srcCompat="@android:drawable/ic_input_add"
+            android:id="@+id/schedule_fab"
+    />
+
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:id="@+id/date_id"

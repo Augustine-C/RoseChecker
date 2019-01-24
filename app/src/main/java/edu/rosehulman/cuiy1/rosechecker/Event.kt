@@ -5,13 +5,15 @@ import android.os.Parcelable
 import com.google.firebase.firestore.Exclude
 import java.text.DateFormat
 
-open class Event(var name:String,
-                 var location : String,
-                 var startTime: DateFormat,
-                 var endTime: DateFormat,
-                 var duration: Int,
-                 var isFinished: Boolean,
-                 var importance: Int) {
+open class Event(
+    var name: String,
+    var location: String,
+    var startTime: DateFormat,
+    var endTime: DateFormat,
+    var duration: Int,
+    var isFinished: Boolean,
+    var importance: Int
+) {
     @get:Exclude
-    var id=""
+    var id = ""
 }

@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view=inflater.inflate(R.layout.login, fragment_contianer, false)
+        val view = inflater.inflate(R.layout.login, fragment_contianer, false)
         view.login_button.setOnClickListener {
             this.onButtonPressed()
         }
@@ -51,7 +51,6 @@ class LoginFragment : Fragment() {
     fun onButtonPressed() {
         listener?.OnLoginListener()
     }
-
 
 
     override fun onAttach(context: Context) {
