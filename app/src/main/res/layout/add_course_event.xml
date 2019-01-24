@@ -9,7 +9,7 @@
               android:text="@string/new_course"
               android:layout_centerHorizontal="true"
               android:layout_marginTop="10dp"
-              android:id="@+id/new_course"
+              android:id="@+id/view_event_name"
               android:textSize="30sp"
     />
     <EditText android:layout_width="match_parent"
@@ -19,7 +19,7 @@
               android:textSize="24sp"
               android:padding="10dp"
               android:background="@android:color/white"
-              android:layout_below="@+id/new_course"
+              android:layout_below="@+id/view_event_name"
     />
 
     <EditText android:layout_width="match_parent"
