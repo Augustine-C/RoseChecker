@@ -27,22 +27,9 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //setSupportActionBar(toolbar)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        //mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
-
-        // Set up the ViewPager with the sections adapter.
- //        container.adapter = mSectionsPagerAdapter
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer ,LoginFragment(),"")
+        ft.replace(R.id.fragment_contianer ,LoginFragment(),"login")
         ft.commit()
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
-
     }
 
 
@@ -66,7 +53,7 @@ class MainActivity : AppCompatActivity()
     }
     override fun OnLoginListener() {
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer,ScheduleFragemnt(),"")
+        ft.replace(R.id.fragment_contianer,ScheduleFragemnt(),"schedule")
         ft.addToBackStack("list")
         ft.commit()
     }
@@ -75,56 +62,5 @@ class MainActivity : AppCompatActivity()
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    /**
-     * A [FragmentPagerAdapter] that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    /*inner class SectionsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-        override fun getItem(position: Int): Fragment {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a SchedulePlaceholderFragment (defined as a static inner class below).
-            return SchedulePlaceholderFragment.newInstance(position + 1)
-        }
-
-        override fun getCount(): Int {
-            // Show 3 total pages.
-            return 3
-        }
-    }*/
-
-/*    *//**
-     * A placeholder fragment containing a simple view.
-     *//*
-    class PlaceholderFragment : Fragment() {
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val rootView = inflater.inflate(R.layout.fragment_main, container, false)
-//            rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
-            return rootView
-        }
-
-        companion object {
-            *//**
-             * The fragment argument representing the section number for this
-             * fragment.
-             *//*
-            private val ARG_SECTION_NUMBER = "section_number"
-
-            *//**
-             * Returns a new instance of this fragment for the given section
-             * number.
-             *//*
-            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-                val fragment = PlaceholderFragment()
-                val args = Bundle()
-                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
-                fragment.arguments = args
-                return fragment
-            }
-        }
-    }*/
 }
