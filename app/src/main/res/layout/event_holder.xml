@@ -38,8 +38,9 @@
                 android:layout_below="@id/eventName"
                 android:layout_centerHorizontal="true"
                 android:textSize="20sp"
-                android:id="@+id/time"
+                android:id="@+id/event_time"
                 android:textStyle="bold"
+
 
         />
         <TextView
@@ -49,7 +50,7 @@
                 android:layout_below="@id/time"
                 android:layout_centerHorizontal="true"
                 android:textSize="20sp"
-                android:id="@+id/location"
+                android:id="@+id/event_location"
                 android:textStyle="bold"
                 android:layout_marginBottom="10dp"
         />
