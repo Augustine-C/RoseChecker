@@ -6,15 +6,15 @@ import kotlinx.android.synthetic.main.event_holder.view.*
 
 class ScheduleViewHolder(itemView:View, val adapter: ScheduleAdapter):RecyclerView.ViewHolder(itemView) {
     init {
-        //TODO Set On Edit Listener
+
         itemView.setOnClickListener{
-            adapter.selectEvent(adapterPosition)
+            adapter.showEditDialog(adapterPosition)
         }
     }
 
     fun bind(event: Event){
         itemView.eventName.text = event.name
-        itemView.event_time.text = event.time.toString()
+//        itemView.event_time.text = event.startTime.toString()
         itemView.event_location.text = event.location
     }
 

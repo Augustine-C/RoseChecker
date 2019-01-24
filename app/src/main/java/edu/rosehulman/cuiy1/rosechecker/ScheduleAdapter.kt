@@ -26,9 +26,7 @@ class ScheduleAdapter(var context:Context?
     override fun getItemCount(): Int {
         return events.size
     }
-    fun selectEvent(position: Int){
-        listener.onEventSelected(events[position])
-    }
+
     fun showEditDialog(position: Int ){
         val builder= AlertDialog.Builder(this.context!!)
         //configure build: title icon message or custom view or list. Buttons (pos, neg, neutral)
@@ -59,12 +57,10 @@ class ScheduleAdapter(var context:Context?
         }
 
         builder.setPositiveButton(android.R.string.ok,{ _,_->
-
            // edit(position,caption,url)
         })
         builder.setNeutralButton("Remove"){ _, _ ->
 //            remove(position)
-
         }
         builder.create().show()
     }
