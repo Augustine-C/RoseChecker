@@ -1,15 +1,12 @@
 package edu.rosehulman.cuiy1.rosechecker
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import kotlinx.android.synthetic.main.content_main.*
-import kotlinx.android.synthetic.main.content_main.view.*
 import kotlinx.android.synthetic.main.login.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,16 +24,16 @@ private const val USER_PASSWORD = "param2"
  *
  */
 class LoginFragment : Fragment() {
-    private var param1: String? = null
-    private var param2: String? = null
+    private var userName: String? = null
+    private var userPassword: String? = null
     private var listener: OnLoginListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            param1 = it.getString(USER_NAME)
-            param2 = it.getString(USER_PASSWORD)
+            userName = it.getString(USER_NAME)
+            userPassword = it.getString(USER_PASSWORD)
         }
     }
 
@@ -91,16 +88,16 @@ class LoginFragment : Fragment() {
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
          *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
+         * @param userName Parameter 1.
+         * @param userPassword Parameter 2.
          * @return A new instance of fragment LoginFragment.
          */
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(userName: String, userPassword: String) =
             LoginFragment().apply {
                 arguments = Bundle().apply {
-                    putString(USER_NAME, param1)
-                    putString(USER_PASSWORD, param2)
+                    putString(USER_NAME, userName)
+                    putString(USER_PASSWORD, userPassword)
                 }
             }
     }

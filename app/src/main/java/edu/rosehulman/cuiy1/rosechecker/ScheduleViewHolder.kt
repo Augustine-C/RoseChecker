@@ -8,7 +8,7 @@ class ScheduleViewHolder(itemView:View, val adapter: ScheduleAdapter):RecyclerVi
     init {
         //TODO Set On Edit Listener
         itemView.setOnClickListener{
-            adapter
+            adapter.selectEvent(adapterPosition)
         }
     }
 
