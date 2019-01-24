@@ -1,26 +1,16 @@
 package edu.rosehulman.cuiy1.rosechecker
 
-import android.net.Uri
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.ViewPager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
 
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_main.view.*
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
                     ,LoginFragment.OnLoginListener
-                    ,ScheduleFragemnt.OnClassSelectedListener{
+                    ,ScheduleFragemnt.OnEventSelectedListener{
 
 
     /**
@@ -81,7 +71,7 @@ class MainActivity : AppCompatActivity()
         ft.commit()
     }
 
-    override fun OnClassSelectedListener(meetingEvent: MeetingEvent) {
+    override fun onEventSelected(event: Event) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

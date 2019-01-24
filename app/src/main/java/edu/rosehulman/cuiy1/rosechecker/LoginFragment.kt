@@ -27,7 +27,6 @@ private const val USER_PASSWORD = "param2"
  *
  */
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var listener: OnLoginListener? = null
@@ -84,7 +83,6 @@ class LoginFragment : Fragment() {
      * for more information.
      */
     interface OnLoginListener {
-        // TODO: Update argument type and name
         fun OnLoginListener()
     }
 
@@ -97,7 +95,6 @@ class LoginFragment : Fragment() {
          * @param param2 Parameter 2.
          * @return A new instance of fragment LoginFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             LoginFragment().apply {
