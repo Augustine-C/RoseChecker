@@ -9,7 +9,7 @@
               android:text="@string/new_course"
               android:layout_centerHorizontal="true"
               android:layout_marginTop="10dp"
-              android:id="@+id/view_event_name"
+              android:id="@+id/view_event_type"
               android:textSize="30sp"
     />
     <EditText android:layout_width="match_parent"
@@ -19,7 +19,7 @@
               android:textSize="24sp"
               android:padding="10dp"
               android:background="@android:color/white"
-              android:layout_below="@+id/view_event_name"
+              android:layout_below="@+id/view_event_type"
     />
 
     <EditText android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="datetime"
                 android:ems="10"
-                android:id="@+id/endTime"
+                android:id="@+id/startTime"
                 android:textSize="24sp"
         />
 
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="datetime"
                 android:ems="10"
-                android:id="@+id/time"
+                android:id="@+id/endTime"
                 android:textSize="24sp"
         />
 
