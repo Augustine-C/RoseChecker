@@ -4,7 +4,12 @@ import android.support.v7.app.AppCompatActivity
 
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.support.design.widget.NavigationView
+import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -15,10 +20,24 @@ import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import kotlinx.android.synthetic.main.choose_event_type.view.*
 import kotlinx.android.synthetic.main.login.*
+import kotlinx.android.synthetic.main.sidebar.*
 
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
-    , LoginFragment.OnLoginListener {
+    , LoginFragment.OnLoginListener, NavigationView.OnNavigationItemSelectedListener {
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.color ->{
+                Log.d("!!!","color selected")
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("click_test")
+                builder.create().show()
+            }
+        }
+        main_content.closeDrawer(GravityCompat.START)
+        return true
+    }
+
     private val eventsRef = FirebaseFirestore.getInstance().collection(Constants.EVENTS_COLLECTION)
 
 
@@ -36,6 +55,13 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val toggle = ActionBarDrawerToggle(
+            this, main_content, toolbar, R.string.open, R.string.close
+        )
+        main_content.addDrawerListener(toggle)
+        toggle.syncState()
+        nav_bar.setNavigationItemSelectedListener(this)
         fab.hide()
         buttons.visibility = View.GONE
         toolbar.visibility = View.GONE
@@ -104,7 +130,7 @@ class MainActivity : AppCompatActivity()
             val endTime = view.endTime.text.toString()
             val keyContent = view.keycontent.text.toString()
             val homeWork = view.homework.text.toString()
-            eventsRef.add(CourseEvent(name,location,startTime,endTime,false,0,keyContent,homeWork))
+            eventsRef.add(Event(name,location,startTime,endTime,false,0,Event.EventType.NomalEvent))
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
