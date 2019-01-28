@@ -19,7 +19,10 @@ class ScheduleFragemnt : Fragment() {
         val recyclerView = inflater.inflate(R.layout.calender_content, container, false) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = ScheduleAdapter(activity)
+        adapater = ScheduleAdapter(activity)
+        adapater!!.addSnapshotListener()
+        recyclerView.adapter = adapater
+
         return recyclerView
     }
 

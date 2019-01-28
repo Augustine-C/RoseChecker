@@ -107,6 +107,7 @@
               android:textSize="24sp"
               android:hint="@string/homework"
               android:inputType="textMultiLine"
+              android:id="@+id/homework"
     />
 
 </RelativeLayout>

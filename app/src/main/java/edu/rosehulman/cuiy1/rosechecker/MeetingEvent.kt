@@ -8,15 +8,14 @@ import java.text.DateFormat
 class MeetingEvent(
     name: String,
     location: String,
-    startTime: DateFormat,
-    endTime: DateFormat,
-    duration: Int,
-    isFinished: Boolean,
-    importance: Int,
+    startTime: String,
+    endTime: String,
+    isFinished: Boolean = false,
+    importance: Int = 0,
     var numPeople: Int,
     var members: String = "",
     var agenda: String = ""
-) : Event(name, location, startTime, endTime, duration, isFinished, importance) {
+) : Event(name, location, startTime, endTime, isFinished, importance) {
 
 
 }

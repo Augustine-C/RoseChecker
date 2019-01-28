@@ -5,17 +5,16 @@ import android.os.Parcelable
 import java.text.DateFormat
 
 class CourseEvent(
-    name: String,
-    location: String,
-    startTime: DateFormat,
-    endTime: DateFormat,
-    duration: Int,
-    isFinished: Boolean,
-    importance: Int,
-    var chapterCovered: String = "",
+    name: String = " ",
+    location: String = " ",
+    startTime: String = " ",
+    endTime: String = " ",
+    isFinished: Boolean = false,
+    importance: Int = 0,
     var keyContent: String = "",
-    var homework: String = "",
-    var preparation: String
-) : Event(name, location, startTime, endTime, duration, isFinished, importance) {
+    var homework: String = ""
+//    var preparation: String
+) : Event(name, location, startTime, endTime, isFinished, importance) {
+
 
 }

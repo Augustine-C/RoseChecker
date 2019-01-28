@@ -3,18 +3,64 @@ package edu.rosehulman.cuiy1.rosechecker
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import java.text.DateFormat
 import java.util.*
 
 class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleViewHolder>() {
+
     var events = ArrayList<Event>()
+    lateinit var registration: ListenerRegistration
     private val eventsRef = FirebaseFirestore
         .getInstance()
         .collection(Constants.EVENTS_COLLECTION)
+
+    fun addSnapshotListener() {
+        Log.d("!!!", "add snapshotlistener ${events}")
+//        PicListWrapper.picList = ArrayList()
+        registration = eventsRef
+            .addSnapshotListener{ snapshot : QuerySnapshot?, firebaseFirestoreException ->
+                if(firebaseFirestoreException != null){
+                    Log.w("!!!", "Firebase Error: $firebaseFirestoreException")
+                    return@addSnapshotListener
+                }
+                processSnapshotDiff(snapshot!!)
+                Log.d("!!!", "get new snapshot ${events} ")
+            }
+//        Log.d("!!!", "add snapshotlistener ${PicListWrapper.picList} ${PicListWrapper.picList[0].id}")
+    }
+
+    private fun processSnapshotDiff(snapshot: QuerySnapshot) {
+        for(documentChange in snapshot.documentChanges){
+            val event = Event.fromSnapshot(documentChange.document)
+            when (documentChange.type){
+                DocumentChange.Type.ADDED -> {
+                    Log.d("!!!", "ADDED")
+                    events.add(0,event)
+                    notifyItemInserted(0)
+                }
+                DocumentChange.Type.REMOVED -> {
+                    Log.d("!!!", "REMOVE ${event.id}")
+                    val pos = events.indexOfFirst { it.id == event.id }
+                    events.removeAt(pos)
+                    notifyItemRemoved(pos)
+                }
+                DocumentChange.Type.MODIFIED -> {
+                    val pos = events.indexOfFirst { it.id == event.id }
+                    Log.d("!!!","MODIFY"+pos.toString())
+                    events[pos] = event
+                    notifyItemChanged(pos)
+                }
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleViewHolder {
         val view = LayoutInflater.from(context)
@@ -68,7 +114,7 @@ class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleView
         eventsRef.add(event)
     }
 
-    fun edit(position: Int, name: String, location: String, startTime: DateFormat, endTime: DateFormat) {
+    fun edit(position: Int, name: String, location: String, startTime: String, endTime: String) {
         val event = events[position]
         event.name = name
         event.location = location
