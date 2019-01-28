@@ -111,18 +111,17 @@ class MainActivity : AppCompatActivity()
         builder.setTitle("Choose a type of event")
         val view = LayoutInflater.from(this).inflate(R.layout.choose_event_type, null, false)
         builder.setView(view)
-
-        view.choose_normalEvent.setOnClickListener { showAddCourseDialog() }
-        view.choose_courseEvent.setOnClickListener { showAddCourseDialog() }
-        view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog() }
-        builder.create().show()
+        val bu=builder.create()
+        view.choose_normalEvent.setOnClickListener { showAddCourseDialog(bu) }
+        view.choose_courseEvent.setOnClickListener { showAddCourseDialog(bu) }
+        view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog(bu) }
+        bu.show()
     }
-    fun showAddCourseDialog() {
+    fun showAddCourseDialog(chooseBuilder: AlertDialog) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add an event")
         val view = LayoutInflater.from(this).inflate(R.layout.add_course_event, null, false)
         builder.setView(view)
-
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             val name = view.title.text.toString()
             val location = view.location.text.toString()
@@ -134,9 +133,10 @@ class MainActivity : AppCompatActivity()
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
+        chooseBuilder.hide()
 
     }
-    fun showAddMeetingDialog() {
+    fun showAddMeetingDialog(chooseBuilder: AlertDialog) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add an event")
         val view = LayoutInflater.from(this).inflate(R.layout.add_meeting_event, null, false)
@@ -152,8 +152,10 @@ class MainActivity : AppCompatActivity()
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
+        chooseBuilder.hide()
 
     }
+
 
 
 }

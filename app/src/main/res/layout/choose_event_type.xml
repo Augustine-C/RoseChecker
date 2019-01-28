@@ -18,14 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:id="@+id/choose_normalEvent"
-            android:layout_toEndOf="@id/choose_courseEvent"
+            android:layout_below="@id/choose_courseEvent"
             android:text="@string/normal_event"
     />
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:id="@+id/choose_meetingEvent"
-            android:layout_toStartOf="@id/choose_courseEvent"
+            android:layout_above="@id/choose_courseEvent"
             android:text="@string/meeting_event"
     />
 
