@@ -2,10 +2,8 @@ package edu.rosehulman.cuiy1.rosechecker
 
 import android.support.v7.app.AppCompatActivity
 
-import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
 import android.support.design.widget.NavigationView
-import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
@@ -14,13 +12,17 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.CalendarView
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import kotlinx.android.synthetic.main.choose_event_type.view.*
-import kotlinx.android.synthetic.main.login.*
-import kotlinx.android.synthetic.main.sidebar.*
+import java.text.SimpleDateFormat
+import java.util.*
+import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
+
+
 
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
@@ -75,6 +77,9 @@ class MainActivity : AppCompatActivity()
         }
         var event : Event
         event = CourseEvent()
+        val date = Calendar.getInstance().time
+        val df = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss" )
+        Log.d("!!!",df.format(date) + date.time)
     }
 
 
@@ -114,13 +119,64 @@ class MainActivity : AppCompatActivity()
         val bu=builder.create()
         view.choose_normalEvent.setOnClickListener { showAddCourseDialog(bu) }
         view.choose_courseEvent.setOnClickListener { showAddCourseDialog(bu) }
-        view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog(bu) }
+        view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog(bu)}
         bu.show()
     }
     fun showAddCourseDialog(chooseBuilder: AlertDialog) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add an event")
         val view = LayoutInflater.from(this).inflate(R.layout.add_course_event, null, false)
+        var start = ""
+        val calendar = Calendar.getInstance()
+        val startingDate = calendar.time.clone() as Date
+        startingDate.year += 1900
+        startingDate.month+=1
+
+        view.startTime.text = String.format("%s/%s/%s ",startingDate.year,startingDate.month, startingDate.date)
+        view.endTime.text = String.format("%s/%s/%s ",startingDate.year,startingDate.month, startingDate.date)
+        view.startTime.setOnClickListener{
+
+            SpinnerDatePickerDialogBuilder()
+                .context(this)
+                .callback({ _, year:Int, month:Int, day:Int ->
+                    (Log.d("DATE",year.toString()+month.toString()+day.toString()))
+                    start = String.format("%s/%s/%s ",year,month + 1,day)
+                    startingDate.year = year
+                    startingDate.month = month
+                    startingDate.date =day
+                    view.startTime.text = start
+                })
+                .spinnerTheme(R.style.NumberPickerStyleTest)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate(startingDate.year, startingDate.month - 1, startingDate.date)
+                .maxDate(2030, 0, 1)
+                .minDate(2000, 0, 1)
+                .build()
+                .show()
+        }
+
+        view.endTime.setOnClickListener{
+            SpinnerDatePickerDialogBuilder()
+                .context(this)
+                .callback({ _, year:Int, month:Int, day:Int ->
+                    (Log.d("DATE",year.toString()+month.toString()+day.toString()))
+                    start = String.format("%s/%s/%s ",year,month + 1,day)
+                    startingDate.year = year
+                    startingDate.month = month
+                    startingDate.date =day
+                    view.endTime.text = start
+                })
+                .spinnerTheme(R.style.NumberPickerStyleTest)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate(startingDate.year, startingDate.month, startingDate.date)
+                .maxDate(2030, 0, 1)
+                .minDate(startingDate.year, startingDate.month, startingDate.date)
+                .build()
+                .show()
+        }
+
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             val name = view.title.text.toString()
@@ -143,6 +199,56 @@ class MainActivity : AppCompatActivity()
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add an event")
         val view = LayoutInflater.from(this).inflate(R.layout.add_meeting_event, null, false)
+        var start = ""
+        val calendar = Calendar.getInstance()
+        val startingDate = calendar.time.clone() as Date
+        startingDate.year += 1900
+        startingDate.month+=1
+
+        view.startTime.text = String.format("%s/%s/%s ",startingDate.year,startingDate.month, startingDate.date)
+        view.endTime.text = String.format("%s/%s/%s ",startingDate.year,startingDate.month, startingDate.date)
+        view.startTime.setOnClickListener{
+
+            SpinnerDatePickerDialogBuilder()
+                .context(this)
+                .callback({ _, year:Int, month:Int, day:Int ->
+                    (Log.d("DATE",year.toString()+month.toString()+day.toString()))
+                    start = String.format("%s/%s/%s ",year,month + 1,day)
+                    startingDate.year = year
+                    startingDate.month = month
+                    startingDate.date =day
+                    view.startTime.text = start
+                })
+                .spinnerTheme(R.style.NumberPickerStyleTest)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate(startingDate.year, startingDate.month - 1, startingDate.date)
+                .maxDate(2030, 0, 1)
+                .minDate(2000, 0, 1)
+                .build()
+                .show()
+        }
+
+        view.endTime.setOnClickListener{
+            SpinnerDatePickerDialogBuilder()
+                .context(this)
+                .callback({ _, year:Int, month:Int, day:Int ->
+                    (Log.d("DATE",year.toString()+month.toString()+day.toString()))
+                    start = String.format("%s/%s/%s ",year,month + 1,day)
+                    startingDate.year = year
+                    startingDate.month = month
+                    startingDate.date =day
+                    view.endTime.text = start
+                })
+                .spinnerTheme(R.style.NumberPickerStyleTest)
+                .showTitle(true)
+                .showDaySpinner(true)
+                .defaultDate(startingDate.year, startingDate.month, startingDate.date)
+                .maxDate(2030, 0, 1)
+                .minDate(startingDate.year, startingDate.month, startingDate.date)
+                .build()
+                .show()
+        }
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             val name = view.meeting_title.text.toString()

@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                            android:id="@+id/choose_event_dialog"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/choose_event_dialog"
+        android:orientation="vertical"
 >
+    <android.support.constraint.Group android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:id="@+id/choose_courseEvent"
-            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
             android:text="@string/course_event"
-
     />
 
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/choose_normalEvent"
-            android:layout_below="@id/choose_courseEvent"
             android:text="@string/normal_event"
     />
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
             android:id="@+id/choose_meetingEvent"
-            android:layout_above="@id/choose_courseEvent"
             android:text="@string/meeting_event"
     />
 
-</RelativeLayout>
+</LinearLayout>
