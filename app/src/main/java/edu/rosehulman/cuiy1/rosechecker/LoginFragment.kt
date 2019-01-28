@@ -58,7 +58,7 @@ class LoginFragment : Fragment() {
         if (context is OnLoginListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnFragmentInteractionListener")
+            throw RuntimeException(context.toString() + " must implement OnDateChangeListener")
         }
     }
 
