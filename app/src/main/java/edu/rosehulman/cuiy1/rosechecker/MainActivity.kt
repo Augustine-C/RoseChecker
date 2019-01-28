@@ -12,6 +12,8 @@ import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
+import kotlinx.android.synthetic.main.add_meeting_event.view.*
+import kotlinx.android.synthetic.main.choose_event_type.view.*
 import kotlinx.android.synthetic.main.login.*
 
 //Augustine and tiger
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity()
 
         ft.commit()
         fab.setOnClickListener {
-            showAddDialog()
+            showChooseDialog()
         }
         var event : Event
         event = CourseEvent()
@@ -78,8 +80,18 @@ class MainActivity : AppCompatActivity()
         ft.addToBackStack("list")
         ft.commit()
     }
+    fun showChooseDialog(){
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Choose a type of event")
+        val view = LayoutInflater.from(this).inflate(R.layout.choose_event_type, null, false)
+        builder.setView(view)
 
-    fun showAddDialog() {
+        view.choose_normalEvent.setOnClickListener { showAddCourseDialog() }
+        view.choose_courseEvent.setOnClickListener { showAddCourseDialog() }
+        view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog() }
+        builder.create().show()
+    }
+    fun showAddCourseDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add an event")
         val view = LayoutInflater.from(this).inflate(R.layout.add_course_event, null, false)
@@ -93,6 +105,24 @@ class MainActivity : AppCompatActivity()
             val keyContent = view.keycontent.text.toString()
             val homeWork = view.homework.text.toString()
             eventsRef.add(CourseEvent(name,location,startTime,endTime,false,0,keyContent,homeWork))
+        }
+        builder.setNegativeButton(android.R.string.cancel, null)
+        builder.create().show()
+
+    }
+    fun showAddMeetingDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Add an event")
+        val view = LayoutInflater.from(this).inflate(R.layout.add_meeting_event, null, false)
+        builder.setView(view)
+        builder.setPositiveButton(android.R.string.ok) { _, _ ->
+            val name = view.meeting_title.text.toString()
+            val location = view.meeting_location.text.toString()
+            val startTime = view.meeting_startTime.text.toString()
+            val endTime = view.meeting_endTime.text.toString()
+            val meetingAgenda = view.meeting_agenda.text.toString()
+            val meetingMember = view.meeting_member.text.toString()
+            eventsRef.add(CourseEvent(name,location,startTime,endTime,false,0,meetingAgenda,meetingMember))
         }
         builder.setNegativeButton(android.R.string.cancel, null)
         builder.create().show()
