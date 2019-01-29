@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.choose_event_type.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
+import kotlin.math.min
 
 
 //Augustine and tiger
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity()
     private val eventsRef = FirebaseFirestore.getInstance().collection(Constants.EVENTS_COLLECTION)
     private lateinit var currentTime: Date
     lateinit var calendarDate: Date
+    var starting = Calendar.getInstance().time
+    var ending = Calendar.getInstance().time
 
 //    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
@@ -59,7 +62,7 @@ class MainActivity : AppCompatActivity()
         calendar_button.setOnClickListener {
             val datePickerDialog = DatePickerDialog(this)
             datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
-                calendarDate = Date(year,month,dayOfMonth)
+                calendarDate = Date(year, month, dayOfMonth)
                 onDateChange(calendarDate)
             }
             datePickerDialog.show()
@@ -157,7 +160,7 @@ class MainActivity : AppCompatActivity()
         val startingDate = calendar.time.clone() as Date
         startingDate.year += 1900
         startingDate.month += 1
-        val endingDate = startingDate.clone() as Date
+
 
 
         view.startDate.setOnClickListener {
@@ -169,6 +172,7 @@ class MainActivity : AppCompatActivity()
                 startingDate.year = year
                 startingDate.month = month
                 startingDate.date = day
+                starting = starting.clone() as Date
                 view.startDate.text = start
             }
             datePiker.show()
@@ -181,24 +185,28 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-//                    startingDate.year = year
-//                    startingDate.month = month
-//                    startingDate.date =day
+                ending.year = year
+                ending.month = month
+                ending.date = day
                 view.endDate.text = start
             }
             datePiker.show()
         }
 
-        view.startTime.setOnClickListener{
-            val timePicker = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+        view.startTime.setOnClickListener {
+            val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 view.startTime.text = "$hourOfDay : $minute"
-            },currentTime.hours,currentTime.minutes,true)
+                starting.hours = hourOfDay
+                starting.minutes = minute
+            }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
-        view.endTime.setOnClickListener{
-            val timePicker = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+        view.endTime.setOnClickListener {
+            val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 view.endTime.text = "$hourOfDay : $minute"
-            },currentTime.hours,currentTime.minutes,true)
+                ending.hours = hourOfDay
+                ending.minutes = minute
+            }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
 
@@ -206,11 +214,10 @@ class MainActivity : AppCompatActivity()
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             val name = view.title.text.toString()
             val location = view.location.text.toString()
-            val startTime = view.startTime.text.toString()
-            val endTime = view.endTime.text.toString()
             val keyContent = view.keycontent.text.toString()
             val homeWork = view.homework.text.toString()
-            val event = Event(name, location, startTime, endTime, false, 0, Event.EventType.CourseEvent)
+            val event =
+                Event(name, location, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.CourseEvent)
             event.courseInfo.put("keyContent", keyContent)
             event.courseInfo.put("homeWork", homeWork)
             eventsRef.add(event)
@@ -242,6 +249,7 @@ class MainActivity : AppCompatActivity()
                 startingDate.month = month
                 startingDate.date = day
                 view.meetingStartDate.text = start
+                starting = starting.clone() as Date
             }
             datePiker.show()
 
@@ -253,35 +261,37 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-//                    startingDate.year = year
-//                    startingDate.month = month
-//                    startingDate.date =day
+                ending.year = year
+                ending.month = month
+                ending.date = day
                 view.meetingEndDate.text = start
             }
             datePiker.show()
         }
 
-        view.meetingStartTime.setOnClickListener{
-            val timePicker = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+        view.meetingStartTime.setOnClickListener {
+            val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 view.meetingStartTime.text = "$hourOfDay : $minute"
-            },currentTime.hours,currentTime.minutes,true)
+                starting.hours = hourOfDay
+                starting.minutes = minute
+            }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
-        view.meetingEndTime.setOnClickListener{
-            val timePicker = TimePickerDialog(this,TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+        view.meetingEndTime.setOnClickListener {
+            val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 view.meetingEndTime.text = "$hourOfDay : $minute"
-            },currentTime.hours,currentTime.minutes,true)
+                ending.hours = hourOfDay
+                ending.minutes = minute
+            }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
         builder.setView(view)
         builder.setPositiveButton(android.R.string.ok) { _, _ ->
             val name = view.meeting_title.text.toString()
             val location = view.meeting_location.text.toString()
-            val startTime = view.meetingStartTime.text.toString()
-            val endTime = view.meetingEndTime.text.toString()
             val meetingAgenda = view.meeting_agenda.text.toString()
             val meetingMember = view.meeting_member.text.toString()
-            val event = Event(name, location, startTime, endTime, false, 0, Event.EventType.MeetingEvent)
+            val event = Event(name, location, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.MeetingEvent)
             event.meetingInfo.put("meetingAgenda", meetingAgenda)
             event.meetingInfo.put("meetingMember", meetingMember)
             eventsRef.add(event)
