@@ -26,41 +26,32 @@ import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 
 //Augustine and tiger
 class MainActivity : AppCompatActivity()
-    , LoginFragment.OnLoginListener, NavigationView.OnNavigationItemSelectedListener {
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.color ->{
-                Log.d("!!!","color selected")
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("click_test")
-                builder.create().show()
-            }
-        }
-        main_content.closeDrawer(GravityCompat.START)
-        return true
-    }
+    , LoginFragment.OnLoginListener, NavigationView.OnNavigationItemSelectedListener
+    , ScheduleFragemnt.OnDateChangeListener{
+
 
     private val eventsRef = FirebaseFirestore.getInstance().collection(Constants.EVENTS_COLLECTION)
-
-
-    /**
-     * The [android.support.v4.view.PagerAdapter] that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * [android.support.v4.app.FragmentStatePagerAdapter].
-     */
+    private var currentTime=Calendar.getInstance().time
+    var calendarDate=Calendar.getInstance().time
 
 //    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        currentTime.year += 1900
+        currentTime.month+=1
         val toggle = ActionBarDrawerToggle(
             this, main_content, toolbar, R.string.open, R.string.close
         )
+        left_button.setOnClickListener {
+            calendarDate.date=calendarDate.date-1
+            onDateChange(calendarDate)
+        }
+        right_button.setOnClickListener {
+            calendarDate.date=calendarDate.date+1
+            onDateChange(calendarDate)
+        }
         main_content.addDrawerListener(toggle)
         toggle.syncState()
         nav_bar.setNavigationItemSelectedListener(this)
@@ -70,7 +61,6 @@ class MainActivity : AppCompatActivity()
         date_id.visibility = View.GONE
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, LoginFragment(), "login")
-
         ft.commit()
         fab.setOnClickListener {
             showChooseDialog()
@@ -106,10 +96,8 @@ class MainActivity : AppCompatActivity()
         fab.show()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
-        val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer, ScheduleFragemnt(), "schedule")
-        ft.addToBackStack("list")
-        ft.commit()
+        date_id.text=String.format("%s/%s/%s ",currentTime.year,currentTime.month, currentTime.date)
+        onDateChange(currentTime)
     }
     fun showChooseDialog(){
         val builder = AlertDialog.Builder(this)
@@ -121,6 +109,29 @@ class MainActivity : AppCompatActivity()
         view.choose_courseEvent.setOnClickListener { showAddCourseDialog(bu) }
         view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog(bu)}
         bu.show()
+    }
+    override fun onDateChange(time: Date) {
+        date_id.text=String.format("%s/%s/%s ",calendarDate.year,calendarDate.month, calendarDate.date)
+        fab.show()
+        buttons.visibility = View.VISIBLE
+        date_id.visibility = View.VISIBLE
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time), "schedule")
+        ft.addToBackStack("list")
+        ft.commit()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.color ->{
+                Log.d("!!!","color selected")
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("click_test")
+                builder.create().show()
+            }
+        }
+        main_content.closeDrawer(GravityCompat.START)
+        return true
     }
     fun showAddCourseDialog(chooseBuilder: AlertDialog) {
         val builder = AlertDialog.Builder(this)

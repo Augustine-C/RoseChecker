@@ -72,6 +72,7 @@
                                  android:background="@color/colorRoseRed"
                                  android:src="@drawable/leftbutton"
                                  android:layout_marginTop="10dp"
+                                 android:id="@+id/left_button"
 
                     />
 
@@ -89,6 +90,7 @@
                                  android:background="@color/colorRoseRed"
                                  android:src="@drawable/rightbutton"
                                  android:layout_marginTop="10dp"
+                                 android:id="@+id/right_button"
                     />
                 </LinearLayout>
 
