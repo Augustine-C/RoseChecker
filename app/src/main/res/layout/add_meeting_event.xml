@@ -44,19 +44,24 @@
                   android:layout_height="wrap_content"
                   android:text="@string/starts"
                   android:layout_weight="10"
-                  android:textSize="24sp"
+                  android:textSize="20sp"
                   android:padding="10dp"
                   android:id="@+id/meeting_startTime"
 
         />
-        <EditText
+        <TextView
                 android:layout_weight="10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="datetime"
-                android:ems="10"
-                android:id="@+id/meeting_endTime"
-                android:textSize="24sp"
+                android:id="@+id/meetingStartDate"
+                android:textSize="20sp"
+        />
+        <TextView
+                android:layout_weight="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/meetingStartTime"
+                android:textSize="20sp"
         />
 
     </LinearLayout>
@@ -72,19 +77,26 @@
                   android:layout_height="wrap_content"
                   android:text="@string/ends"
                   android:layout_weight="10"
-                  android:textSize="24sp"
+                  android:textSize="20sp"
                   android:padding="10dp"
 
         />
-        <EditText
+        <TextView
                 android:layout_weight="10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="datetime"
-                android:ems="10"
-                android:id="@+id/time"
-                android:textSize="24sp"
+                android:id="@+id/meetingEndDate"
+                android:textSize="20sp"
         />
+        <TextView
+                android:layout_weight="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/meetingEndTime"
+                android:textSize="20sp"
+        />
+
+
 
     </LinearLayout>
 
