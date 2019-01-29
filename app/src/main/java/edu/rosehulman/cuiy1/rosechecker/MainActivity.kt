@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity()
         calendar_button.setOnClickListener {
             val datePickerDialog = DatePickerDialog(this)
             datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
-                calendarDate = Date(year, month, dayOfMonth)
+                calendarDate = Date(year - 1900, month, dayOfMonth)
                 onDateChange(calendarDate)
             }
             datePickerDialog.show()
