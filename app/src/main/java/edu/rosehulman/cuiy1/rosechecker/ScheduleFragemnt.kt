@@ -13,6 +13,7 @@ import java.util.*
 private const val ARG_YEAR = "year"
 private const val ARG_DATE = "date"
 private const val ARG_MONTH = "month"
+
 class ScheduleFragemnt : Fragment() {
     private var adapater: ScheduleAdapter? = null
     private var year: Int? = null
@@ -22,10 +23,11 @@ class ScheduleFragemnt : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             year = it.getInt(ARG_YEAR)
-            month=it.getInt(ARG_MONTH)
-            date=it.getInt(ARG_DATE)
+            month = it.getInt(ARG_MONTH)
+            date = it.getInt(ARG_DATE)
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,7 +36,7 @@ class ScheduleFragemnt : Fragment() {
         val recyclerView = inflater.inflate(R.layout.calender_content, container, false) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
-        adapater = ScheduleAdapter(activity)
+        adapater = ScheduleAdapter(activity, Date(year!!, month!!, date!!,0,0,0))
         adapater!!.addSnapshotListener()
         recyclerView.adapter = adapater
         return recyclerView

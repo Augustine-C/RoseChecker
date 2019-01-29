@@ -17,6 +17,7 @@ import android.view.View
 import android.widget.CalendarView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.choose_event_type.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
+import kotlinx.android.synthetic.main.add_course_event.*
 import kotlin.math.min
 
 
@@ -45,8 +47,6 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         currentTime = Calendar.getInstance().time
-        currentTime.year += 1900
-//        currentTime.month += 1
         calendarDate = currentTime.clone() as Date
         val toggle = ActionBarDrawerToggle(
             this, main_content, toolbar, R.string.open, R.string.close
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onDateChange(time: Date) {
-        date_id.text = String.format("%s/%s/%s ", calendarDate.year, calendarDate.month + 1, calendarDate.date)
+        date_id.text = String.format("%s/%s/%s ", calendarDate.year + 1900, calendarDate.month + 1, calendarDate.date)
         fab.show()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
@@ -157,9 +157,6 @@ class MainActivity : AppCompatActivity()
         var start = ""
         val calendar = Calendar.getInstance()
         val startingDate = calendar.time.clone() as Date
-        startingDate.year += 1900
-        startingDate.month += 1
-
 
 
         view.startDate.setOnClickListener {
@@ -168,10 +165,10 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-                startingDate.year = year
-                startingDate.month = month
-                startingDate.date = day
-                starting = starting.clone() as Date
+                starting.year = year - 1900
+                starting.month = month
+                starting.date = day
+
                 view.startDate.text = start
             }
             datePiker.show()
@@ -184,7 +181,7 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-                ending.year = year
+                ending.year = year - 1900
                 ending.month = month
                 ending.date = day
                 view.endDate.text = start
@@ -197,6 +194,7 @@ class MainActivity : AppCompatActivity()
                 view.startTime.text = "$hourOfDay : $minute"
                 starting.hours = hourOfDay
                 starting.minutes = minute
+                starting.seconds = 0
             }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
@@ -205,6 +203,7 @@ class MainActivity : AppCompatActivity()
                 view.endTime.text = "$hourOfDay : $minute"
                 ending.hours = hourOfDay
                 ending.minutes = minute
+                ending.seconds = 0
             }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
@@ -215,8 +214,11 @@ class MainActivity : AppCompatActivity()
             val location = view.location.text.toString()
             val keyContent = view.keycontent.text.toString()
             val homeWork = view.homework.text.toString()
+            Log.d("DATE","start time: ${starting.year} / ${starting.month} / ${starting.day} ")
+            val timeStamp = "${starting.year}${starting.month}${starting.date}"
             val event =
-                Event(name, location, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.CourseEvent)
+                Event(name, location,
+                    timeStamp, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.CourseEvent)
             event.courseInfo.put("keyContent", keyContent)
             event.courseInfo.put("homeWork", homeWork)
             eventsRef.add(event)
@@ -234,8 +236,7 @@ class MainActivity : AppCompatActivity()
         var start = ""
         val calendar = Calendar.getInstance()
         val startingDate = calendar.time.clone() as Date
-        startingDate.year += 1900
-        startingDate.month += 1
+
 
 
         view.meetingStartDate.setOnClickListener {
@@ -244,11 +245,10 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-                startingDate.year = year
-                startingDate.month = month
-                startingDate.date = day
+                starting.year = year - 1900
+                starting.month = month
+                starting.date = day
                 view.meetingStartDate.text = start
-                starting = starting.clone() as Date
             }
             datePiker.show()
 
@@ -260,7 +260,7 @@ class MainActivity : AppCompatActivity()
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                 start = String.format("%s/%s/%s ", year, month + 1, day)
-                ending.year = year
+                ending.year = year - 1900
                 ending.month = month
                 ending.date = day
                 view.meetingEndDate.text = start
@@ -273,6 +273,7 @@ class MainActivity : AppCompatActivity()
                 view.meetingStartTime.text = "$hourOfDay : $minute"
                 starting.hours = hourOfDay
                 starting.minutes = minute
+                starting.seconds = 0
             }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
@@ -281,6 +282,7 @@ class MainActivity : AppCompatActivity()
                 view.meetingEndTime.text = "$hourOfDay : $minute"
                 ending.hours = hourOfDay
                 ending.minutes = minute
+                ending.seconds = 0
             }, currentTime.hours, currentTime.minutes, true)
             timePicker.show()
         }
@@ -290,7 +292,9 @@ class MainActivity : AppCompatActivity()
             val location = view.meeting_location.text.toString()
             val meetingAgenda = view.meeting_agenda.text.toString()
             val meetingMember = view.meeting_member.text.toString()
-            val event = Event(name, location, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.MeetingEvent)
+            val timeStamp = "${starting.year}${starting.month}${starting.date}"
+            val event =
+                Event(name, location,timeStamp, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.MeetingEvent)
             event.meetingInfo.put("meetingAgenda", meetingAgenda)
             event.meetingInfo.put("meetingMember", meetingMember)
             eventsRef.add(event)

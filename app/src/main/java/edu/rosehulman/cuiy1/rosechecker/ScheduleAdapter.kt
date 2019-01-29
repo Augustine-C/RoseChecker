@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -14,14 +15,13 @@ import kotlinx.android.synthetic.main.add_course_event.view.*
 import java.text.DateFormat
 import java.util.*
 
-class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleViewHolder>() {
+class ScheduleAdapter(var context: Context?, var date : Date) : RecyclerView.Adapter<ScheduleViewHolder>() {
 
     var events = ArrayList<Event>()
     lateinit var registration: ListenerRegistration
     private val eventsRef = FirebaseFirestore
         .getInstance()
         .collection(Constants.EVENTS_COLLECTION)
-
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events}")
 //        PicListWrapper.picList = ArrayList()
@@ -43,8 +43,10 @@ class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleView
             when (documentChange.type){
                 DocumentChange.Type.ADDED -> {
                     Log.d("!!!", "ADDED")
-                    events.add(0,event)
-                    notifyItemInserted(0)
+                    if(event.timestamp.equals("${date.year}${date.month}${date.date}")) {
+                        events.add(0, event)
+                        notifyItemInserted(0)
+                    }
                 }
                 DocumentChange.Type.REMOVED -> {
                     Log.d("!!!", "REMOVE ${event.id}")

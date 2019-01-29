@@ -4,12 +4,14 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.ServerTimestamp
 
 open class Event(
     var name: String = " ",
     var location: String = " ",
-    var startTime: Timestamp? = null,
-    var endTime: Timestamp? = null,
+    var timestamp: String= " ",
+    @ServerTimestamp var startTime: Timestamp? = null,
+    @ServerTimestamp var endTime: Timestamp? = null,
     var isFinished: Boolean = false,
     var importance: Int = 0,
     var eventType: EventType = EventType.NomalEvent,
