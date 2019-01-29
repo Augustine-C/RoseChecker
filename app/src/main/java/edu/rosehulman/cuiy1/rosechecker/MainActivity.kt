@@ -80,8 +80,7 @@ class MainActivity : AppCompatActivity()
         fab.setOnClickListener {
             showChooseDialog()
         }
-        var event: Event
-        event = CourseEvent()
+
         val date = Calendar.getInstance().time
         val df = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
         Log.d("!!!", df.format(date) + date.time)

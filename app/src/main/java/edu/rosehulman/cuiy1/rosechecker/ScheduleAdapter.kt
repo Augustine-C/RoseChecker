@@ -80,22 +80,7 @@ class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleView
         builder.setView(view)
         val event = events[position]
         when (event.javaClass) {
-            CourseEvent::class.java -> {
-                view.view_event_type.text = "CourseEvent"
-                view.title.setText(event.name)
-                view.location.setText(event.location)
-//                view.startTime.setText(event.startTime.toString())
-//                view.endTime.setText(event.endTime.toString())
-                true
-            }
-            MeetingEvent::class.java -> {
-                view.view_event_type.text = "MeetingEvent"
-                view.title.setText(event.name)
-                view.location.setText(event.location)
-//                view.startTime.setText(event.startTime.toString())
-//                view.endTime.setText(event.endTime.toString())
-                true
-            }
+
             else -> {
                 true
             }
@@ -114,14 +99,14 @@ class ScheduleAdapter(var context: Context?) : RecyclerView.Adapter<ScheduleView
         eventsRef.add(event)
     }
 
-    fun edit(position: Int, name: String, location: String, startTime: String, endTime: String) {
-        val event = events[position]
-        event.name = name
-        event.location = location
-        event.startTime = startTime
-        event.endTime = endTime
-        eventsRef.document(events[position].id).set(event)
-    }
+//    fun edit(position: Int, name: String, location: String, startTime: String, endTime: String) {
+//        val event = events[position]
+//        event.name = name
+//        event.location = location
+//        event.startTime = startTime
+//        event.endTime = endTime
+//        eventsRef.document(events[position].id).set(event)
+//    }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {
         holder.bind(events[position])
