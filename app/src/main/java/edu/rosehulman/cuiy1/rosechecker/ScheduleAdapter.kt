@@ -6,14 +6,12 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
-import java.text.DateFormat
 import java.util.*
 
 class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adapter<ScheduleViewHolder>() {
@@ -38,6 +36,12 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
             }
 //        Log.d("!!!", "add snapshotlistener ${PicListWrapper.picList} ${PicListWrapper.picList[0].id}")
     }
+    fun removeSnapshotListener(){
+        Log.d("!!!", "Remove snapshotlistener")
+        registration.remove()
+    }
+
+
 
     private fun processSnapshotDiff(snapshot: QuerySnapshot) {
         for (documentChange in snapshot.documentChanges) {
@@ -53,14 +57,23 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 DocumentChange.Type.REMOVED -> {
                     Log.d("!!!", "REMOVE ${event.id}")
                     val pos = events.indexOfFirst { it.id == event.id }
-                    events.removeAt(pos)
-                    notifyItemRemoved(pos)
+                    if(pos != -1){
+                        events.removeAt(pos)
+                        notifyItemRemoved(pos)
+                    }
+
                 }
                 DocumentChange.Type.MODIFIED -> {
                     val pos = events.indexOfFirst { it.id == event.id }
                     Log.d("!!!", "MODIFY" + pos.toString())
-                    events[pos] = event
-                    notifyItemChanged(pos)
+                    if(event.timestamp.equals("${date.year}${date.month}${date.date}")){
+                        events[pos] = event
+                        notifyItemChanged(pos)
+                    } else {
+                        events.removeAt(pos)
+                        notifyItemRemoved(pos)
+                    }
+
                 }
             }
         }
@@ -80,7 +93,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
 
         val event = events[position]
         when (event.eventType) {
-            Event.EventType.NomalEvent -> {
+            Event.EventType.NormalEvent -> {
 
             }
             Event.EventType.MeetingEvent -> {

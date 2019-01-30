@@ -15,7 +15,7 @@ private const val ARG_DATE = "date"
 private const val ARG_MONTH = "month"
 
 class ScheduleFragemnt : Fragment() {
-    private var adapater: ScheduleAdapter? = null
+    private var adapter: ScheduleAdapter? = null
     private var year: Int? = null
     private var month: Int? = null
     private var date: Int? = null
@@ -25,6 +25,8 @@ class ScheduleFragemnt : Fragment() {
             year = it.getInt(ARG_YEAR)
             month = it.getInt(ARG_MONTH)
             date = it.getInt(ARG_DATE)
+            adapter = ScheduleAdapter(activity, Date(year!!, month!!, date!!,0,0,0))
+            adapter!!.addSnapshotListener()
         }
     }
 
@@ -36,11 +38,15 @@ class ScheduleFragemnt : Fragment() {
         val recyclerView = inflater.inflate(R.layout.calender_content, container, false) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
-        adapater = ScheduleAdapter(activity, Date(year!!, month!!, date!!,0,0,0))
-        adapater!!.addSnapshotListener()
-        recyclerView.adapter = adapater
+        recyclerView.adapter = adapter
         return recyclerView
     }
+
+    override fun onStop() {
+        super.onStop()
+        adapter?.removeSnapshotListener()
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
