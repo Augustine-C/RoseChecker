@@ -97,6 +97,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
         val eventTime=Utils.timeStampToString(event.startTime!!, event.endTime!!)
         var starting = event.startTime!!.toDate()
         var ending = event.endTime!!.toDate()
+        var start = ""
         when (event.eventType) {
             Event.EventType.NormalEvent -> {
 
@@ -105,20 +106,90 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 val builder = AlertDialog.Builder(this.context!!)
                 builder.setTitle("Edit a Meeting Event")
                 val view = LayoutInflater.from(context).inflate(R.layout.add_meeting_event, null, false)
-                view.title.setText(event.name)
-                view.location.setText(event.location)
+                view.meeting_title.setText(event.name)
+                view.meeting_location.setText(event.location)
                 view.meetingStartDate.text=eventTime.startDate
                 view.meetingEndDate.text=eventTime.endDate
                 view.meetingStartTime.text=eventTime.startTime
                 view.meetingEndTime.text=eventTime.endTime
                 view.meeting_agenda.setText(event.meetingInfo.get("meetingAgenda"))
                 view.meeting_member.setText(event.meetingInfo.get("meetingMember"))
-                var start = ""
-                view.startDate.setOnClickListener {
+                view.meetingStartDate.setOnClickListener {
                     val datePiker = DatePickerDialog(context)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                         start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
+                        starting.year = year - 1900
+                        starting.month = month
+                        starting.date = day
+                        view.meetingStartDate.text = start
+                    }
+                    datePiker.show()
+
+                }
+
+                view.meetingEndDate.setOnClickListener {
+                    val datePiker = DatePickerDialog(context)
+                    datePiker.setOnDateSetListener { _, year, month, day ->
+                        (Log.d("DATE", year.toString() + month.toString() + day.toString()))
+                        start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
+                        ending.year = year - 1900
+                        ending.month = month
+                        ending.date = day
+                        view.meetingEndDate.text = start
+                    }
+                    datePiker.show()
+                }
+
+                view.meetingStartTime.setOnClickListener {
+                    val timePicker = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                        view.meetingStartTime.text = "$hourOfDay : $minute"
+                        starting.hours = hourOfDay
+                        starting.minutes = minute
+                        starting.seconds = 0
+                    }, event.startTime!!.toDate().hours, event.startTime!!.toDate().hours, true)
+                    timePicker.show()
+                }
+                view.meetingEndTime.setOnClickListener {
+                    val timePicker = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                        view.meetingEndTime.text = "$hourOfDay : $minute"
+                        ending.hours = hourOfDay
+                        ending.minutes = minute
+                        ending.seconds = 0
+                    }, event.endTime!!.toDate().hours, event.endTime!!.toDate().minutes, true)
+                    timePicker.show()
+                }
+                builder.setView(view)
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+                    val name = view.meeting_title.text.toString()
+                    val location = view.meeting_location.text.toString()
+                    val meeting_agenda = view.meeting_agenda.text.toString()
+                    val meeting_member = view.meeting_member.text.toString()
+                    editMeeting(position, name, location, meeting_agenda, meeting_member,starting,ending)
+                }
+                builder.setNeutralButton("Remove") { _, _ ->
+                           remove(position)
+                }
+                builder.create().show()
+            }
+            Event.EventType.CourseEvent -> {
+                val builder = AlertDialog.Builder(this.context!!)
+                builder.setTitle("Edit a Coure Event")
+                val view = LayoutInflater.from(context).inflate(R.layout.add_course_event, null, false)
+                view.title.setText(event.name)
+                view.location.setText(event.location)
+                view.keycontent.setText(event.courseInfo.get("keyContent"))
+                view.startTime.text=eventTime.startTime
+                view.startDate.text=eventTime.startDate
+                view.endTime.text=eventTime.endTime
+                view.endDate.text=eventTime.endDate
+                view.homework.setText(event.courseInfo.get("homeWork"))
+                view.startDate.setOnClickListener {
+
+                    val datePiker = DatePickerDialog(context)
+                    datePiker.setOnDateSetListener { _, year, month, day ->
+                        (Log.d("DATE", year.toString() + month.toString() + day.toString()))
+                        start = String.format("%s/%s/%s ", year, month + 1, day)
                         starting.year = year - 1900
                         starting.month = month
                         starting.date = day
@@ -129,6 +200,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 }
 
                 view.endDate.setOnClickListener {
+
                     val datePiker = DatePickerDialog(context)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
@@ -147,7 +219,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                         starting.hours = hourOfDay
                         starting.minutes = minute
                         starting.seconds = 0
-                    }, event.startTime!!.toDate().hours, event.startTime!!.toDate().hours, true)
+                    }, event.endTime!!.toDate().hours, event.endTime!!.toDate().minutes, true)
                     timePicker.show()
                 }
                 view.endTime.setOnClickListener {
@@ -163,35 +235,9 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 builder.setPositiveButton(android.R.string.ok, { _, _ ->
                     val name = view.title.text.toString()
                     val location = view.location.text.toString()
-                    val meeting_agenda = view.meeting_agenda.text.toString()
-                    val meeting_member = view.meeting_member.text.toString()
-                    editMeeting(position, name, location, meeting_agenda, meeting_member,starting,ending)
-                })
-                builder.setNeutralButton("Remove") { _, _ ->
-                           remove(position)
-                }
-                builder.create().show()
-            }
-            Event.EventType.CourseEvent -> {
-                val builder = AlertDialog.Builder(this.context!!)
-                builder.setTitle("Edit a Coure Event")
-                val view = LayoutInflater.from(context).inflate(R.layout.add_course_event, null, false)
-                view.title.setText(event.name)
-                view.location.setText(event.location)
-                view.keycontent.setText(event.courseInfo.get("keyContent"))
-                view.startTime.text=eventTime.startTime
-                view.startDate.text=eventTime.startDate
-                view.endTime.text=eventTime.endTime
-                view.endDate.text=eventTime.endDate
-                view.homework.setText(event.courseInfo.get("homeWork"))
-                builder.setView(view)
-                builder.setPositiveButton(android.R.string.ok, { _, _ ->
-                    val name = view.title.text.toString()
-                    val location = view.location.text.toString()
                     val keyContent = view.keycontent.text.toString()
-                    val timestamp=Timestamp(Date(view.startDate.text.toString()))
                     val homework = view.homework.text.toString()
-                    editCourse(position, name, location, keyContent, homework)
+                    editCourse(position, name, location, keyContent, homework,starting,ending)
                 })
                 builder.setNeutralButton("Remove") { _, _ ->
                     remove(position)
@@ -213,16 +259,20 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
         temp.meetingInfo.replace("meetingAgenda",meeting_agenda)
         temp.meetingInfo.replace("meetingMember",meeting_member)
         temp.startTime= Timestamp(starting)
+        temp.timestamp="${starting.year}${starting.month}${starting.date}"
         temp.endTime= Timestamp(ending)
         eventsRef.document(events[position].id).set(temp)
     }
 
-    fun editCourse(position: Int, name: String, location: String, keyContent: String, homework: String) {
+    fun editCourse(position: Int, name: String, location: String, keyContent: String, homework: String,starting:Date,ending:Date) {
         val temp=events[position]
         temp.name=name
         temp.location=location
         temp.courseInfo.replace("keyContent",keyContent)
         temp.courseInfo.replace("homeWork",homework)
+        temp.startTime= Timestamp(starting)
+        temp.endTime= Timestamp(ending)
+        temp.timestamp="${starting.year}${starting.month}${starting.date}"
         eventsRef.document(events[position].id).set(temp)
     }
 
