@@ -8,12 +8,14 @@ object Utils {
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime{
         val date = startTimeStamp.toDate()
         val endDate = endTimestamp.toDate()
+        val startYear = date.year.toString()
+        val endYear = endDate.year.toString()
         val startMonth = MONTH[date.month]
         val startDay = date.day.toString()
         val endDay = endDate.day.toString()
         val endMonth = MONTH[date.month]
         val startTime = "${date.hours} : ${date.minutes}"
         val endTime = "${endDate.hours} : ${endDate.minutes}"
-        return EventTime(startMonth,startDay,endMonth,endDay,startTime,endTime)
+        return EventTime(startYear,endYear,startMonth,startDay,endMonth,endDay,startTime,endTime)
     }
 }
