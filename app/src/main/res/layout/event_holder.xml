@@ -71,7 +71,6 @@
 
                     android:textSize="20sp"
                     android:id="@+id/event_time"
-                    android:textStyle="bold"
 
 
             />
@@ -81,7 +80,6 @@
                     android:text="@string/location"
                     android:textSize="20sp"
                     android:id="@+id/event_location"
-                    android:textStyle="bold"
                     android:layout_marginBottom="10dp"
             />
 
