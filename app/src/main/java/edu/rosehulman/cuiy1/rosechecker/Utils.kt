@@ -6,16 +6,18 @@ object Utils {
     val MONTH = arrayListOf<String>("JAN","FEB", "MAR", "APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC")
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime{
-        val date = startTimeStamp.toDate()
-        val endDate = endTimestamp.toDate()
-        val startYear = date.year.toString()
-        val endYear = endDate.year.toString()
-        val startMonth = MONTH[date.month]
-        val startDay = date.day.toString()
-        val endDay = endDate.day.toString()
-        val endMonth = MONTH[date.month]
-        val startTime = "${date.hours} : ${date.minutes}"
-        val endTime = "${endDate.hours} : ${endDate.minutes}"
-        return EventTime(startYear,endYear,startMonth,startDay,endMonth,endDay,startTime,endTime)
+        val start = startTimeStamp.toDate()
+        val end = endTimestamp.toDate()
+        val startYear = start.year.toString()
+        val endYear = end.year.toString()
+        val startMonth = MONTH[start.month]
+        val startDay = start.day.toString()
+        val endDay = end.day.toString()
+        val endMonth = MONTH[start.month]
+        val startTime = "${start.hours} : ${start.minutes}"
+        val endTime = "${end.hours} : ${end.minutes}"
+        val startDate = "$startYear/$startMonth/$startDay"
+        val endDate = "$endYear/$endMonth/$endDay"
+        return EventTime(startYear,endYear,startMonth,startDay,endMonth,endDay,startTime,endTime, startDate, endDate)
     }
 }
