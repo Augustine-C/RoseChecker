@@ -1,11 +1,14 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -21,7 +24,6 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
     private val eventsRef = FirebaseFirestore
         .getInstance()
         .collection(Constants.EVENTS_COLLECTION)
-
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events}")
 //        PicListWrapper.picList = ArrayList()
@@ -92,6 +94,9 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
     fun showEditDialog(position: Int) {
 
         val event = events[position]
+        val eventTime=Utils.timeStampToString(event.startTime!!, event.endTime!!)
+        var starting = event.startTime!!.toDate()
+        var ending = event.endTime!!.toDate()
         when (event.eventType) {
             Event.EventType.NormalEvent -> {
 
@@ -102,15 +107,65 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 val view = LayoutInflater.from(context).inflate(R.layout.add_meeting_event, null, false)
                 view.title.setText(event.name)
                 view.location.setText(event.location)
+                view.meetingStartDate.text=eventTime.startDate
+                view.meetingEndDate.text=eventTime.endDate
+                view.meetingStartTime.text=eventTime.startTime
+                view.meetingEndTime.text=eventTime.endTime
                 view.meeting_agenda.setText(event.meetingInfo.get("meetingAgenda"))
                 view.meeting_member.setText(event.meetingInfo.get("meetingMember"))
+                var start = ""
+                view.startDate.setOnClickListener {
+                    val datePiker = DatePickerDialog(context)
+                    datePiker.setOnDateSetListener { _, year, month, day ->
+                        (Log.d("DATE", year.toString() + month.toString() + day.toString()))
+                        start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
+                        starting.year = year - 1900
+                        starting.month = month
+                        starting.date = day
+                        view.startDate.text = start
+                    }
+                    datePiker.show()
+
+                }
+
+                view.endDate.setOnClickListener {
+                    val datePiker = DatePickerDialog(context)
+                    datePiker.setOnDateSetListener { _, year, month, day ->
+                        (Log.d("DATE", year.toString() + month.toString() + day.toString()))
+                        start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
+                        ending.year = year - 1900
+                        ending.month = month
+                        ending.date = day
+                        view.endDate.text = start
+                    }
+                    datePiker.show()
+                }
+
+                view.startTime.setOnClickListener {
+                    val timePicker = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                        view.startTime.text = "$hourOfDay : $minute"
+                        starting.hours = hourOfDay
+                        starting.minutes = minute
+                        starting.seconds = 0
+                    }, event.startTime!!.toDate().hours, event.startTime!!.toDate().hours, true)
+                    timePicker.show()
+                }
+                view.endTime.setOnClickListener {
+                    val timePicker = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                        view.endTime.text = "$hourOfDay : $minute"
+                        ending.hours = hourOfDay
+                        ending.minutes = minute
+                        ending.seconds = 0
+                    }, event.endTime!!.toDate().hours, event.endTime!!.toDate().minutes, true)
+                    timePicker.show()
+                }
                 builder.setView(view)
                 builder.setPositiveButton(android.R.string.ok, { _, _ ->
                     val name = view.title.text.toString()
                     val location = view.location.text.toString()
                     val meeting_agenda = view.meeting_agenda.text.toString()
                     val meeting_member = view.meeting_member.text.toString()
-                    editMeeting(position, name, location, meeting_agenda, meeting_member)
+                    editMeeting(position, name, location, meeting_agenda, meeting_member,starting,ending)
                 })
                 builder.setNeutralButton("Remove") { _, _ ->
                            remove(position)
@@ -124,12 +179,17 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 view.title.setText(event.name)
                 view.location.setText(event.location)
                 view.keycontent.setText(event.courseInfo.get("keyContent"))
+                view.startTime.text=eventTime.startTime
+                view.startDate.text=eventTime.startDate
+                view.endTime.text=eventTime.endTime
+                view.endDate.text=eventTime.endDate
                 view.homework.setText(event.courseInfo.get("homeWork"))
                 builder.setView(view)
                 builder.setPositiveButton(android.R.string.ok, { _, _ ->
                     val name = view.title.text.toString()
                     val location = view.location.text.toString()
                     val keyContent = view.keycontent.text.toString()
+                    val timestamp=Timestamp(Date(view.startDate.text.toString()))
                     val homework = view.homework.text.toString()
                     editCourse(position, name, location, keyContent, homework)
                 })
@@ -146,12 +206,14 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
 
     }
 
-    fun editMeeting(position: Int, name: String, location: String, meeting_agenda: String, meeting_member: String) {
+    fun editMeeting(position: Int, name: String, location: String, meeting_agenda: String, meeting_member: String,starting:Date,ending:Date) {
         val temp=events[position]
         temp.name=name
         temp.location=location
         temp.meetingInfo.replace("meetingAgenda",meeting_agenda)
         temp.meetingInfo.replace("meetingMember",meeting_member)
+        temp.startTime= Timestamp(starting)
+        temp.endTime= Timestamp(ending)
         eventsRef.document(events[position].id).set(temp)
     }
 

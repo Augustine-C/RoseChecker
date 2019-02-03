@@ -168,7 +168,6 @@ class MainActivity : AppCompatActivity()
                 starting.year = year - 1900
                 starting.month = month
                 starting.date = day
-
                 view.startDate.text = start
             }
             datePiker.show()
