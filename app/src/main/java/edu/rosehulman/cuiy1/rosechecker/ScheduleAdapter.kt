@@ -116,6 +116,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 view.meeting_member.setText(event.meetingInfo.get("meetingMember"))
                 view.meetingStartDate.setOnClickListener {
                     val datePiker = DatePickerDialog(context)
+                    datePiker.updateDate(starting.year+1900,starting.month,starting.date)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                         start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
@@ -130,6 +131,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
 
                 view.meetingEndDate.setOnClickListener {
                     val datePiker = DatePickerDialog(context)
+                    datePiker.updateDate(ending.year+1900,ending.month,ending.date)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                         start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
@@ -187,6 +189,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 view.startDate.setOnClickListener {
 
                     val datePiker = DatePickerDialog(context)
+                    datePiker.updateDate(starting.year+1900,starting.month,starting.date)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                         start = String.format("%s/%s/%s ", year, month + 1, day)
@@ -202,6 +205,7 @@ class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adap
                 view.endDate.setOnClickListener {
 
                     val datePiker = DatePickerDialog(context)
+                    datePiker.updateDate(ending.year+1900,ending.month,ending.date)
                     datePiker.setOnDateSetListener { _, year, month, day ->
                         (Log.d("DATE", year.toString() + month.toString() + day.toString()))
                         start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
