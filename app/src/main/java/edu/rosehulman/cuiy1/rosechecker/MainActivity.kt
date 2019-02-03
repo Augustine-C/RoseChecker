@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.CalendarView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,14 +40,14 @@ class MainActivity : AppCompatActivity()
     , ScheduleFragemnt.OnDateChangeListener {
 
 
-    private val eventsRef = FirebaseFirestore.getInstance().collection(Constants.EVENTS_COLLECTION)
+    private lateinit var eventsRef:CollectionReference
     private lateinit var currentTime: Date
     lateinit var calendarDate: Date
     var starting = Calendar.getInstance().time
     var ending = Calendar.getInstance().time
     val auth = FirebaseAuth.getInstance()
     lateinit var authListener: FirebaseAuth.AuthStateListener
-    private val RC_SIGN_IN = 1
+//    private val RC_SIGN_IN = 1
     private val RC_ROSEFIRE_LOGIN = 1001
     private var uid:String=""
 
@@ -125,6 +126,7 @@ class MainActivity : AppCompatActivity()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
         date_id.text = String.format("%s/%s/%s ", currentTime.year, currentTime.month, currentTime.date)
+        eventsRef=FirebaseFirestore.getInstance().collection(Constants.USERS_COLLECTION).document(uid).collection(Constants.EVENTS_COLLECTION)
         onDateChange(currentTime,uid)
     }
     override fun onStart() {
@@ -142,10 +144,6 @@ class MainActivity : AppCompatActivity()
             Log.d(Constants.TAG, "In auth listener, User: $user")
             if (user != null) {
                 Log.d(Constants.TAG, "UID: ${user.uid}")
-                Log.d(Constants.TAG, "Name: ${user.displayName}")
-                Log.d(Constants.TAG, "Email: ${user.email}")
-                Log.d(Constants.TAG, "Photo: ${user.photoUrl}")
-                Log.d(Constants.TAG, "Phone: ${user.phoneNumber}")
                 uid=user.uid
                 swtichToSchduleFragment(uid)
             } else {
@@ -154,8 +152,8 @@ class MainActivity : AppCompatActivity()
         }
     }
     fun onRosefireLogin() {
-        //val signInIntent = Rosefire.getSignInIntent(this, getString(R.string.token))
-        //startActivityForResult(signInIntent,RC_ROSEFIRE_LOGIN)
+        val signInIntent = Rosefire.getSignInIntent(this, getString(R.string.token))
+        startActivityForResult(signInIntent,RC_ROSEFIRE_LOGIN)
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

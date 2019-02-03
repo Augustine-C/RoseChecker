@@ -28,8 +28,7 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
         .collection(Constants.EVENTS_COLLECTION)
 
     fun addSnapshotListener() {
-        Log.d("!!!", "add snapshotlistener ${events}")
-//        PicListWrapper.picList = ArrayList()
+        Log.d("!!!", "add snapshotlistener ${events} $uid")
         registration = eventsRef
             .addSnapshotListener { snapshot: QuerySnapshot?, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
@@ -39,7 +38,6 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
                 processSnapshotDiff(snapshot!!)
                 Log.d("!!!", "get new snapshot ${events} ")
             }
-//        Log.d("!!!", "add snapshotlistener ${PicListWrapper.picList} ${PicListWrapper.picList[0].id}")
     }
 
     fun removeSnapshotListener() {
