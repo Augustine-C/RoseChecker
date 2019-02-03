@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity()
             val datePiker = DatePickerDialog(this)
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
-                start = String.format("%s/%s/%s ", year, month + 1, day)
+                start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
                 starting.year = year - 1900
                 starting.month = month
                 starting.date = day
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity()
 
         view.startTime.setOnClickListener {
             val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                view.startTime.text = "$hourOfDay : $minute"
+                view.startTime.text = "$hourOfDay : ${Utils.pad(minute)}"
                 starting.hours = hourOfDay
                 starting.minutes = minute
                 starting.seconds = 0
@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity()
         }
         view.endTime.setOnClickListener {
             val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                view.endTime.text = "$hourOfDay : $minute"
+                view.endTime.text = "$hourOfDay : ${Utils.pad(minute)}"
                 ending.hours = hourOfDay
                 ending.minutes = minute
                 ending.seconds = 0
@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity()
 
         view.meetingStartTime.setOnClickListener {
             val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                view.meetingStartTime.text = "$hourOfDay : $minute"
+                view.meetingStartTime.text = "$hourOfDay : ${Utils.pad(minute)}"
                 starting.hours = hourOfDay
                 starting.minutes = minute
                 starting.seconds = 0
@@ -278,7 +278,7 @@ class MainActivity : AppCompatActivity()
         }
         view.meetingEndTime.setOnClickListener {
             val timePicker = TimePickerDialog(this, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
-                view.meetingEndTime.text = "$hourOfDay : $minute"
+                view.meetingEndTime.text = "$hourOfDay : ${Utils.pad(minute)}"
                 ending.hours = hourOfDay
                 ending.minutes = minute
                 ending.seconds = 0
