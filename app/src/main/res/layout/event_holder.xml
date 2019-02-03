@@ -12,52 +12,82 @@
         android:layout_marginTop="4dp"
         android:padding="4dp"
         app:cardCornerRadius="@dimen/fab_margin">
-    <RelativeLayout
+    <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:showIn="@layout/activity_main"
+            android:orientation="horizontal"
             tools:context=".MainActivity">
-
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                        android:orientation="vertical"
+        >
         <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="@string/event_name"
-                android:layout_centerHorizontal="true"
-                android:textSize="24sp"
-                android:id="@+id/eventName"
+                android:text="Jun"
+                android:textSize="40sp"
+                android:layout_gravity="center"
+                android:id="@+id/event_datemonth"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"
         />
+            <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="day"
+                    android:textSize="40sp"
+                    android:layout_gravity="center"
+                    android:id="@+id/event_dateday"
+                    android:textStyle="bold"
+            />
+        </LinearLayout>
 
-        <TextView
-                android:layout_width="wrap_content"
+        <TextView android:layout_width="8dp"
+                  android:layout_height="match_parent"
+                   android:background="@color/colorPrimary"
+                  android:layout_marginRight="10dp"
+        />
+        <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/time"
-                android:layout_below="@id/eventName"
-                android:layout_centerHorizontal="true"
-                android:textSize="20sp"
-                android:id="@+id/event_time"
-                android:textStyle="bold"
+                android:orientation="vertical"
+        >
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/event_name"
+                    android:textSize="24sp"
+                    android:id="@+id/eventName"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+            />
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time"
+
+                    android:textSize="20sp"
+                    android:id="@+id/event_time"
+                    android:textStyle="bold"
 
 
-        />
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/location"
-                android:layout_below="@id/event_time"
-                android:layout_centerHorizontal="true"
-                android:textSize="20sp"
-                android:id="@+id/event_location"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp"
-        />
+            />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location"
+                    android:textSize="20sp"
+                    android:id="@+id/event_location"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+            />
 
+        </LinearLayout>
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </android.support.v7.widget.CardView>
