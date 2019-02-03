@@ -14,14 +14,14 @@ open class Event(
     @ServerTimestamp var endTime: Timestamp? = null,
     var isFinished: Boolean = false,
     var importance: Int = 0,
-    var eventType: EventType = EventType.NomalEvent,
+    var eventType: EventType = EventType.NormalEvent,
     var courseInfo: HashMap<String, String> = hashMapOf(),
     var meetingInfo: HashMap<String, String> = hashMapOf()
 
 
 ) {
     enum class EventType {
-        NomalEvent,
+        NormalEvent,
         CourseEvent,
         MeetingEvent;
     }
