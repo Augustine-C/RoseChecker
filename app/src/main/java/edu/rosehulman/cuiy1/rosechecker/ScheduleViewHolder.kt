@@ -14,7 +14,7 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
 
     fun bind(event: Event) {
         itemView.eventName.text = event.name
-//        itemView.event_time.text = event.startTime.toString()
+        itemView.event_time.text = event.startTime.toString()
         itemView.event_location.text = event.location
     }
 
