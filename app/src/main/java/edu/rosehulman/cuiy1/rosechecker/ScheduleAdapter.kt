@@ -185,8 +185,8 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
                 view.location.setText(event.location)
                 view.keycontent.setText(event.courseInfo.get("keyContent"))
                 view.startTime.text = eventTime.showStartTime
-                view.startDate.text = eventTime.showEndTime
-                view.endTime.text = eventTime.endTime
+                view.startDate.text = eventTime.startDate
+                view.endTime.text = eventTime.showEndTime
                 view.endDate.text = eventTime.endDate
                 view.homework.setText(event.courseInfo.get("homeWork"))
                 view.startDate.setOnClickListener {
