@@ -17,12 +17,14 @@ import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import java.util.*
 
-class ScheduleAdapter(var context: Context?, var date: Date) : RecyclerView.Adapter<ScheduleViewHolder>() {
+class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : RecyclerView.Adapter<ScheduleViewHolder>() {
 
     var events = ArrayList<Event>()
     lateinit var registration: ListenerRegistration
     private val eventsRef = FirebaseFirestore
         .getInstance()
+        .collection(Constants.USERS_COLLECTION)
+        .document(uid)
         .collection(Constants.EVENTS_COLLECTION)
 
     fun addSnapshotListener() {

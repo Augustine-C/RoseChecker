@@ -13,19 +13,22 @@ import java.util.*
 private const val ARG_YEAR = "year"
 private const val ARG_DATE = "date"
 private const val ARG_MONTH = "month"
+private const val ARG_UID="UID"
 
 class ScheduleFragemnt : Fragment() {
     private var adapter: ScheduleAdapter? = null
     private var year: Int? = null
     private var month: Int? = null
     private var date: Int? = null
+    private var uid:String? =""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             year = it.getInt(ARG_YEAR)
             month = it.getInt(ARG_MONTH)
             date = it.getInt(ARG_DATE)
-            adapter = ScheduleAdapter(activity, Date(year!!, month!!, date!!,0,0,0))
+            uid=it.getString(ARG_UID)
+            adapter = ScheduleAdapter(activity, Date(year!!, month!!, date!!,0,0,0),uid!!)
             adapter!!.addSnapshotListener()
         }
     }
@@ -60,7 +63,7 @@ class ScheduleFragemnt : Fragment() {
      * for more information.
      */
     interface OnDateChangeListener {
-        fun onDateChange(time: Date)
+        fun onDateChange(time: Date,uid: String)
     }
 
     companion object {
@@ -74,12 +77,13 @@ class ScheduleFragemnt : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(time: Date) =
+        fun newInstance(time: Date,uid:String) =
             ScheduleFragemnt().apply {
                 arguments = Bundle().apply {
                     putInt(ARG_DATE, time.date)
                     putInt(ARG_YEAR, time.year)
                     putInt(ARG_MONTH, time.month)
+                    putString(ARG_UID,uid)
                 }
             }
     }
