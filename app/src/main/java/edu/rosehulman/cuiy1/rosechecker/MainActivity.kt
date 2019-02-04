@@ -40,18 +40,17 @@ class MainActivity : AppCompatActivity()
     , ScheduleFragemnt.OnDateChangeListener {
 
 
-    private lateinit var eventsRef:CollectionReference
+    private lateinit var eventsRef: CollectionReference
     private lateinit var currentTime: Date
     lateinit var calendarDate: Date
     var starting = Calendar.getInstance().time
     var ending = Calendar.getInstance().time
     val auth = FirebaseAuth.getInstance()
     lateinit var authListener: FirebaseAuth.AuthStateListener
-//    private val RC_SIGN_IN = 1
+    private val RC_SIGN_IN = 1
     private val RC_ROSEFIRE_LOGIN = 1001
-    private var uid:String=""
+    private var uid: String = ""
 
-//    private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,27 +61,40 @@ class MainActivity : AppCompatActivity()
         val toggle = ActionBarDrawerToggle(
             this, main_content, toolbar, R.string.open, R.string.close
         )
+        main_content.addDrawerListener(toggle)
+        toggle.syncState()
+        nav_bar.setNavigationItemSelectedListener(this)
+
+        fab.setOnClickListener {
+            showChooseDialog()
+        }
         left_button.setOnClickListener {
             calendarDate.date = calendarDate.date - 1
-            onDateChange(calendarDate,uid!!)
+            Utils.isAll = false
+            onDateChange(calendarDate, uid!!)
         }
         right_button.setOnClickListener {
             calendarDate.date = calendarDate.date + 1
-            onDateChange(calendarDate,uid!!)
+            Utils.isAll = false
+            onDateChange(calendarDate, uid!!)
         }
         calendar_button.setOnClickListener {
             val datePickerDialog = DatePickerDialog(this)
             datePickerDialog.setOnDateSetListener { _, year, month, dayOfMonth ->
                 calendarDate = Date(year - 1900, month, dayOfMonth)
-                onDateChange(calendarDate,uid)
+                Utils.isAll = false
+                onDateChange(calendarDate, uid)
             }
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL,"ALL",{dialog, which ->
+                date_id.text = "ALL EVENTS"
+                fab.show()
+                val ft = supportFragmentManager.beginTransaction()
+                ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(currentTime, uid!!), "schedule")
+                Utils.isAll = true
+                ft.commit()
+
+            })
             datePickerDialog.show()
-        }
-        main_content.addDrawerListener(toggle)
-        toggle.syncState()
-        nav_bar.setNavigationItemSelectedListener(this)
-        fab.setOnClickListener {
-            showChooseDialog()
         }
 
         val date = Calendar.getInstance().time
@@ -109,7 +121,8 @@ class MainActivity : AppCompatActivity()
 
         return super.onOptionsItemSelected(item)
     }
-    fun switchToLoginFragment(){
+
+    fun switchToLoginFragment() {
         fab.hide()
         buttons.visibility = View.GONE
         toolbar.visibility = View.GONE
@@ -118,17 +131,22 @@ class MainActivity : AppCompatActivity()
         ft.replace(R.id.fragment_contianer, LoginFragment(), "login")
         ft.commit()
     }
+
     override fun OnLoginListener() {
         onRosefireLogin()
     }
-    fun swtichToSchduleFragment(uid:String){
+
+    fun swtichToSchduleFragment(uid: String) {
         fab.show()
         buttons.visibility = View.VISIBLE
+        toolbar.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
         date_id.text = String.format("%s/%s/%s ", currentTime.year, currentTime.month, currentTime.date)
-        eventsRef=FirebaseFirestore.getInstance().collection(Constants.USERS_COLLECTION).document(uid).collection(Constants.EVENTS_COLLECTION)
-        onDateChange(currentTime,uid)
+        eventsRef = FirebaseFirestore.getInstance().collection(Constants.USERS_COLLECTION).document(uid)
+            .collection(Constants.EVENTS_COLLECTION)
+        onDateChange(currentTime, uid)
     }
+
     override fun onStart() {
         super.onStart()
         auth.addAuthStateListener(authListener)
@@ -138,23 +156,26 @@ class MainActivity : AppCompatActivity()
         super.onStop()
         auth.removeAuthStateListener(authListener)
     }
-    fun initializeListeners(){
+
+    fun initializeListeners() {
         authListener = FirebaseAuth.AuthStateListener { auth ->
             val user = auth.currentUser
             Log.d(Constants.TAG, "In auth listener, User: $user")
             if (user != null) {
                 Log.d(Constants.TAG, "UID: ${user.uid}")
-                uid=user.uid
+                uid = user.uid
                 swtichToSchduleFragment(uid)
             } else {
                 switchToLoginFragment()
             }
         }
     }
+
     fun onRosefireLogin() {
         val signInIntent = Rosefire.getSignInIntent(this, getString(R.string.token))
-        startActivityForResult(signInIntent,RC_ROSEFIRE_LOGIN)
+        startActivityForResult(signInIntent, RC_ROSEFIRE_LOGIN)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == RC_ROSEFIRE_LOGIN) {
@@ -166,6 +187,7 @@ class MainActivity : AppCompatActivity()
             }
         }
     }
+
     fun showChooseDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose a type of event")
@@ -178,26 +200,35 @@ class MainActivity : AppCompatActivity()
         bu.show()
     }
 
-    override fun onDateChange(time: Date,uid:String) {
+    override fun onDateChange(time: Date, uid: String) {
         date_id.text = String.format("%s/%s/%s ", calendarDate.year + 1900, calendarDate.month + 1, calendarDate.date)
         fab.show()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time,uid!!), "schedule")
+        ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
     }
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Log.d("!!!!!",item.itemId.toString())
+        Log.d("!!!!!", item.itemId.toString())
         when (item.itemId) {
             R.id.color -> {
                 Log.d("!!!", "color selected")
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("click_test")
                 builder.create().show()
-        }
+            }
+            R.id.delete ->{
+
+            }
+            R.id.logout -> {
+                auth.signOut()
+            }
+            else -> {
+                Log.d("!!!","not match")
+            }
         }
         main_content.closeDrawer(GravityCompat.START)
         return true
@@ -266,11 +297,13 @@ class MainActivity : AppCompatActivity()
             val location = view.location.text.toString()
             val keyContent = view.keycontent.text.toString()
             val homeWork = view.homework.text.toString()
-            Log.d("DATE","start time: ${starting.year} / ${starting.month} / ${starting.day} ")
+            Log.d("DATE", "start time: ${starting.year} / ${starting.month} / ${starting.day} ")
             val timeStamp = "${starting.year}${starting.month}${starting.date}"
             val event =
-                Event(name, location,
-                    timeStamp, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.CourseEvent)
+                Event(
+                    name, location,
+                    timeStamp, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.CourseEvent
+                )
             event.courseInfo.put("keyContent", keyContent)
             event.courseInfo.put("homeWork", homeWork)
             eventsRef.add(event)
@@ -296,7 +329,7 @@ class MainActivity : AppCompatActivity()
             val datePiker = DatePickerDialog(this)
             datePiker.setOnDateSetListener { _, year, month, day ->
                 (Log.d("DATE", year.toString() + month.toString() + day.toString()))
-                start = String.format("%s/%s/%s ", year,Utils.MONTH[month], day)
+                start = String.format("%s/%s/%s ", year, Utils.MONTH[month], day)
                 starting.year = year - 1900
                 starting.month = month
                 starting.date = day
@@ -346,7 +379,16 @@ class MainActivity : AppCompatActivity()
             val meetingMember = view.meeting_member.text.toString()
             val timeStamp = "${starting.year}${starting.month}${starting.date}"
             val event =
-                Event(name, location,timeStamp, Timestamp(starting), Timestamp(ending), false, 0, Event.EventType.MeetingEvent)
+                Event(
+                    name,
+                    location,
+                    timeStamp,
+                    Timestamp(starting),
+                    Timestamp(ending),
+                    false,
+                    0,
+                    Event.EventType.MeetingEvent
+                )
             event.meetingInfo.put("meetingAgenda", meetingAgenda)
             event.meetingInfo.put("meetingMember", meetingMember)
             eventsRef.add(event)

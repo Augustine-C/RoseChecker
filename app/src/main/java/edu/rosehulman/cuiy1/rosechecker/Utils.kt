@@ -4,6 +4,7 @@ import com.google.firebase.Timestamp
 
 object Utils {
     val MONTH = arrayListOf<String>("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
+    var isAll = false
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()

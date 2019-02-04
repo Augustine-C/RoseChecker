@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group>
         <item
                 android:id="@+id/download"
                 android:icon="@drawable/download"
@@ -15,12 +15,12 @@
                 android:id="@+id/color"
                 android:icon="@drawable/color"
                 android:title="@string/color" />
+        <!--<item-->
+                <!--android:id="@+id/share"-->
+                <!--android:icon="@drawable/share"-->
+                <!--android:title="@string/share" />-->
         <item
-                android:id="@+id/Share"
-                android:icon="@drawable/share"
-                android:title="@string/share" />
-        <item
-                android:id="@+id/Logout"
+                android:id="@+id/logout"
                 android:icon="@drawable/logout"
                 android:title="@string/logout" />
     </group>

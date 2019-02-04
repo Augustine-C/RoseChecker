@@ -27,17 +27,30 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
 
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events} $uid")
-        registration = eventsRef
-            .orderBy("startTime", Query.Direction.DESCENDING)
-            .whereEqualTo("timestamp","${date.year}${date.month}${date.date}")
-            .addSnapshotListener { snapshot: QuerySnapshot?, firebaseFirestoreException ->
-                if (firebaseFirestoreException != null) {
-                    Log.w("!!!", "Firebase Error: $firebaseFirestoreException")
-                    return@addSnapshotListener
+        if(Utils.isAll) {
+            registration = eventsRef
+                .orderBy("startTime", Query.Direction.DESCENDING)
+                .addSnapshotListener { snapshot: QuerySnapshot?, firebaseFirestoreException ->
+                    if (firebaseFirestoreException != null) {
+                        Log.w("!!!", "Firebase Error: $firebaseFirestoreException")
+                        return@addSnapshotListener
+                    }
+                    processSnapshotDiff(snapshot!!)
+                    Log.d("!!!", "get new snapshot ${events} ")
                 }
-                processSnapshotDiff(snapshot!!)
-                Log.d("!!!", "get new snapshot ${events} ")
-            }
+        } else {
+            registration = eventsRef
+                .orderBy("startTime", Query.Direction.DESCENDING)
+                .whereEqualTo("timestamp", "${date.year}${date.month}${date.date}")
+                .addSnapshotListener { snapshot: QuerySnapshot?, firebaseFirestoreException ->
+                    if (firebaseFirestoreException != null) {
+                        Log.w("!!!", "Firebase Error: $firebaseFirestoreException")
+                        return@addSnapshotListener
+                    }
+                    processSnapshotDiff(snapshot!!)
+                    Log.d("!!!", "get new snapshot ${events} ")
+                }
+        }
     }
 
     fun removeSnapshotListener() {
@@ -53,8 +66,10 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
                 DocumentChange.Type.ADDED -> {
                     Log.d("!!!", "ADDED")
 //                    if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
-                        events.add(0, event)
-                        notifyItemInserted(0)
+                    events.add(event)
+                    events.sortWith(compareBy{it.startTime})
+                    val dest = events.indexOfFirst { it.id == event.id }
+                    notifyItemInserted(dest)
 //                    }
                 }
                 DocumentChange.Type.REMOVED -> {
@@ -69,7 +84,15 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
                 DocumentChange.Type.MODIFIED -> {
                     val pos = events.indexOfFirst { it.id == event.id }
                     Log.d("!!!", "MODIFY" + pos.toString())
-                    if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
+                    if(Utils.isAll){
+                        val temp = pos
+                        events[pos] = event
+                        notifyItemChanged(pos)
+                        events.sortWith(compareBy{it.startTime})
+                        val dest = events.indexOfFirst { it.id == event.id }
+                        notifyItemMoved(temp, dest)
+                    }
+                    else if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
                         val temp = pos
                         events[pos] = event
                         notifyItemChanged(pos)
