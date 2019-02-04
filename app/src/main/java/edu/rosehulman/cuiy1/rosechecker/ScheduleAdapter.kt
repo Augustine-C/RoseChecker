@@ -9,10 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import java.util.*
@@ -27,9 +24,12 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
         .document(uid)
         .collection(Constants.EVENTS_COLLECTION)
 
+
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events} $uid")
         registration = eventsRef
+            .orderBy("startTime", Query.Direction.DESCENDING)
+            .whereEqualTo("timestamp","${date.year}${date.month}${date.date}")
             .addSnapshotListener { snapshot: QuerySnapshot?, firebaseFirestoreException ->
                 if (firebaseFirestoreException != null) {
                     Log.w("!!!", "Firebase Error: $firebaseFirestoreException")
@@ -52,10 +52,10 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
             when (documentChange.type) {
                 DocumentChange.Type.ADDED -> {
                     Log.d("!!!", "ADDED")
-                    if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
+//                    if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
                         events.add(0, event)
                         notifyItemInserted(0)
-                    }
+//                    }
                 }
                 DocumentChange.Type.REMOVED -> {
                     Log.d("!!!", "REMOVE ${event.id}")
@@ -70,8 +70,12 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
                     val pos = events.indexOfFirst { it.id == event.id }
                     Log.d("!!!", "MODIFY" + pos.toString())
                     if (event.timestamp.equals("${date.year}${date.month}${date.date}")) {
+                        val temp = pos
                         events[pos] = event
                         notifyItemChanged(pos)
+                        events.sortWith(compareBy{it.startTime})
+                        val dest = events.indexOfFirst { it.id == event.id }
+                        notifyItemMoved(temp, dest)
                     } else {
                         events.removeAt(pos)
                         notifyItemRemoved(pos)

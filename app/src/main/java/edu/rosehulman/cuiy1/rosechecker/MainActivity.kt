@@ -185,18 +185,19 @@ class MainActivity : AppCompatActivity()
         date_id.visibility = View.VISIBLE
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time,uid!!), "schedule")
-        ft.addToBackStack("list")
         ft.commit()
     }
 
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        Log.d("!!!!!",item.itemId.toString())
         when (item.itemId) {
             R.id.color -> {
                 Log.d("!!!", "color selected")
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("click_test")
                 builder.create().show()
-            }
+        }
         }
         main_content.closeDrawer(GravityCompat.START)
         return true
