@@ -253,12 +253,12 @@ class MainActivity : AppCompatActivity()
                         iterator.next()
 //                        professor name
                         val location = iterator.next().substring(10)
-                        val startTime=iterator. next().substring(9)
-                        val localStartDate = LocalDate.parse(startTime, DateTimeFormatter.ofPattern("yyyyMMddThhmmss"))
+                        val startTime=iterator. next().substring(8)
+                        val localStartDate = LocalDate.parse(startTime, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss" ))
                         val startDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                         val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
-                        val endTime=iterator. next().substring(9)
-                        val localEndDate = LocalDate.parse(endTime, DateTimeFormatter.ofPattern("yyyyMMddThhmmss"))
+                        val endTime=iterator. next().substring(6)
+                        val localEndDate = LocalDate.parse(endTime, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
                         val endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                         eventsRef.add(Event(name,location,timeStamp, Timestamp(startDate),Timestamp(endDate)))
                     }
