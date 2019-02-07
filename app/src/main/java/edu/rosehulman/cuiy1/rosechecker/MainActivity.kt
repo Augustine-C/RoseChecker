@@ -4,19 +4,23 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
+import android.os.Environment
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.CalendarView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -28,10 +32,15 @@ import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import kotlinx.android.synthetic.main.choose_event_type.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import com.tsongkha.spinnerdatepicker.SpinnerDatePickerDialogBuilder
 import edu.rosehulman.rosefire.Rosefire
 import kotlinx.android.synthetic.main.add_course_event.*
+import net.fortuna.ical4j.data.CalendarBuilder
+import org.apache.commons.io.FileUtils
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import kotlin.math.min
+
 
 
 //Augustine and tiger
@@ -39,7 +48,7 @@ class MainActivity : AppCompatActivity()
     , LoginFragment.OnLoginListener, NavigationView.OnNavigationItemSelectedListener
     , ScheduleFragemnt.OnDateChangeListener {
 
-
+    private val WRITE_EXTERNAL_STORAGE_PERMISSION = 2
     private lateinit var eventsRef: CollectionReference
     private lateinit var currentTime: Date
     lateinit var calendarDate: Date
@@ -52,9 +61,11 @@ class MainActivity : AppCompatActivity()
     private var uid: String = ""
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         currentTime = Calendar.getInstance().time
         calendarDate = currentTime.clone() as Date
         initializeListeners()
@@ -100,6 +111,10 @@ class MainActivity : AppCompatActivity()
         val date = Calendar.getInstance().time
         val df = SimpleDateFormat("yyyy.MM.dd 'at' HH:mm:ss")
         Log.d("!!!", df.format(date) + date.time)
+
+        checkPermissions()
+
+
     }
 
 
@@ -208,6 +223,7 @@ class MainActivity : AppCompatActivity()
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
+
     }
 
 
@@ -226,12 +242,70 @@ class MainActivity : AppCompatActivity()
             R.id.logout -> {
                 auth.signOut()
             }
+            R.id.download -> {
+                checkPermissions()
+//                val icalParser = ICALParser(this.resources.openRawResource(R.raw.cuiy1))
+//                val outputStream = FileOutputStream("temp.ics")
+                val icsInput = this.resources.openRawResource(R.raw.cuiy1)
+                Log.d("!!!!!",icsInput.toString())
+
+
+//                icsInput.use { icsInput ->
+//                    outputStream.use { outputStream ->
+//                        icsInput.copyTo(outputStream)
+//                    }
+//                }
+//                val ics = FileInputStream("temp.ics")
+//                val calendarBuilder = CalendarBuilder()
+//                val calendar = calendarBuilder.build(icsInput)
+//                for(com in calendar.components){
+//                    Log.d("!!!!!!!", "componemts: $com")
+//                }
+
+                Log.d("!!!", "test:")
+
+            }
             else -> {
                 Log.d("!!!","not match")
             }
         }
         main_content.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun checkPermissions() {
+        // Check to see if we already have permissions
+        if (ContextCompat
+                .checkSelfPermission(
+                    this,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // If we do not, request them from the user
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                WRITE_EXTERNAL_STORAGE_PERMISSION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>, grantResults: IntArray
+    ) {
+        when (requestCode) {
+            WRITE_EXTERNAL_STORAGE_PERMISSION -> {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    Log.d(Constants.TAG, "Permission granted")
+                } else {
+                    // permission denied
+                }
+                return
+            }
+        }
     }
 
     fun showAddCourseDialog(chooseBuilder: AlertDialog) {
