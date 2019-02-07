@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
-import android.os.Environment
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -16,7 +15,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -25,7 +23,6 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ServerTimestamp
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
@@ -33,14 +30,14 @@ import kotlinx.android.synthetic.main.choose_event_type.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import edu.rosehulman.rosefire.Rosefire
-import kotlinx.android.synthetic.main.add_course_event.*
-import net.fortuna.ical4j.data.CalendarBuilder
-import org.apache.commons.io.FileUtils
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import kotlin.math.min
-
+import org.apache.commons.io.IOUtils
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 //Augustine and tiger
@@ -246,8 +243,36 @@ class MainActivity : AppCompatActivity()
                 checkPermissions()
 //                val icalParser = ICALParser(this.resources.openRawResource(R.raw.cuiy1))
 //                val outputStream = FileOutputStream("temp.ics")
-                val icsInput = this.resources.openRawResource(R.raw.cuiy1)
-                Log.d("!!!!!",icsInput.toString())
+                val icsInput = assets.open("chenx6.ics")
+                val br = BufferedReader(InputStreamReader(icsInput, "UTF-8"))
+                val iterator = br.lineSequence().iterator()
+                while(iterator.hasNext()) {
+                    val line = iterator.next()
+                    if(line.equals("BEGIN:VEVENT")){
+                        val name=iterator.next().substring(8)
+                        iterator.next()
+//                        professor name
+                        val location = iterator.next().substring(10)
+                        val startTime=iterator. next().substring(9)
+                        val localStartDate = LocalDate.parse(startTime, DateTimeFormatter.ofPattern("yyyyMMddThhmmss"))
+                        val startDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
+                        val endTime=iterator. next().substring(9)
+                        val localEndDate = LocalDate.parse(endTime, DateTimeFormatter.ofPattern("yyyyMMddThhmmss"))
+                        val endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        eventsRef.add(Event(name,location,timeStamp, Timestamp(startDate),Timestamp(endDate)))
+                    }
+                }
+                br.close()
+                var s: String? = null
+                try {
+                    s = IOUtils.toString(icsInput)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+                IOUtils.closeQuietly(icsInput)
+                Log.d("!!!!!",s)
 
 
 //                icsInput.use { icsInput ->
@@ -272,6 +297,7 @@ class MainActivity : AppCompatActivity()
         main_content.closeDrawer(GravityCompat.START)
         return true
     }
+
 
     private fun checkPermissions() {
         // Check to see if we already have permissions
