@@ -11,6 +11,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:padding="4dp"
+        android:elevation="5dp"
         app:cardCornerRadius="@dimen/fab_margin">
     <LinearLayout
 
@@ -23,21 +24,25 @@
         <LinearLayout android:layout_width="100dp"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
+                      android:layout_gravity="center"
         >
         <TextView
                 android:layout_width = "wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Jun"
-                android:textSize="40sp"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
                 android:layout_gravity="center"
                 android:id="@+id/event_datemonth"
                 android:textStyle="bold"
+
         />
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="day"
-                    android:textSize="40sp"
+                    android:textSize="30sp"
+                    android:textColor="@android:color/black"
                     android:layout_gravity="center"
                     android:id="@+id/event_dateday"
                     android:textStyle="bold"
@@ -55,20 +60,20 @@
                 android:orientation="vertical"
         >
             <TextView
+                    android:textColor="@android:color/black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/event_name"
                     android:textSize="24sp"
                     android:id="@+id/eventName"
                     android:textStyle="bold"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
             />
 
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/time"
-
                     android:textSize="20sp"
                     android:id="@+id/event_time"
 
@@ -80,7 +85,7 @@
                     android:text="@string/location"
                     android:textSize="20sp"
                     android:id="@+id/event_location"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
             />
 
         </LinearLayout>

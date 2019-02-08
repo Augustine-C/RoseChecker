@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
@@ -31,10 +32,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import edu.rosehulman.rosefire.Rosefire
 import org.apache.commons.io.IOUtils
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -61,6 +59,7 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         currentTime = Calendar.getInstance().time
         calendarDate = currentTime.clone() as Date
@@ -109,6 +108,7 @@ class MainActivity : AppCompatActivity()
         Log.d("!!!", df.format(date) + date.time)
 
         checkPermissions()
+
 
 
     }
@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity()
                 Log.d(Constants.TAG, "UID: ${user.uid}")
                 uid = user.uid
                 swtichToSchduleFragment(uid)
+
             } else {
                 switchToLoginFragment()
             }
@@ -212,13 +213,36 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onDateChange(time: Date, uid: String) {
-        date_id.text = String.format("%s/%s/%s ", calendarDate.year + 1900, calendarDate.month + 1, calendarDate.date)
+        date_id.text =
+            "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
         fab.show()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
+        if (intent.type == "text/calendar") {
+            Log.d("!!!!", "access test")
+            try {
+                val uri = intent.data
+                val fs = contentResolver.openInputStream(uri)
+                val events = Utils.convertFromImputStream(fs)
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Adding ${events.size} events to your calendar")
+                builder.setNegativeButton("cancel",{dialog, which ->
+                })
+                builder.setPositiveButton("OK",{dialog, which ->
+                    for(event in events){
+                        eventsRef.add(event)
+                    }
+                })
+                builder.create().show()
+            } catch (e: Exception) {
+                Log.e("error",e.toString())
+            }
+            intent.setData(null)
+        }
+
 
     }
 
@@ -240,37 +264,52 @@ class MainActivity : AppCompatActivity()
             }
             R.id.download -> {
                 checkPermissions()
-//                val icalParser = ICALParser(this.resources.openRawResource(R.raw.cuiy1))
-//                val outputStream = FileOutputStream("temp.ics")
-                val icsInput = assets.open("chenx6.ics")
-                val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss")
-                val reader = icsInput.bufferedReader()
-                val iterator = reader.lines().iterator()
-               while (iterator.hasNext()) {
-                    val line = iterator.next()
-                    if (line.equals("BEGIN:VEVENT")) {
-                        val name = iterator.next().substring(8)
-                        iterator.next()
-//                        professor name
-                        val location = iterator.next().substring(9)
-                        var startTime = iterator.next().substring(8)
-                        if(startTime.length<14){
-                            startTime=startTime+iterator.next()
-                        }
-                        Log.d(Constants.TAG,startTime)
-                        val startDate=dateFormat.parse(startTime)
-                        val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
-                        Log.d(Constants.TAG,timeStamp)
-                        var endTime = iterator.next().substring(6)
-                        if(endTime.length<14){
-                            endTime=endTime+iterator.next()
-                        }
-                        val endDate=dateFormat.parse(endTime)
-                        eventsRef.add(Event(name, location, timeStamp, Timestamp(startDate), Timestamp(endDate), false,0,Event.EventType.CourseEvent))
-                        Log.d(Constants.TAG,"course added")
-                    }
+                val icsInput = this.resources.openRawResource(R.raw.cuiy1)
+                val events = Utils.convertFromImputStream(icsInput)
+                for (event in events) {
+                    eventsRef.add(event)
                 }
-                Log.d("!!!", "test:")
+
+//                val icsInput = assets.open("chenx6.ics")
+//                val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss")
+//                val reader = icsInput.bufferedReader()
+//                val iterator = reader.lines().iterator()
+//                while (iterator.hasNext()) {
+//                    val line = iterator.next()
+//                    if (line.equals("BEGIN:VEVENT")) {
+//                        val name = iterator.next().substring(8)
+//                        iterator.next()
+////                        professor name
+//                        val location = iterator.next().substring(9)
+//                        var startTime = iterator.next().substring(8)
+//                        if (startTime.length < 14) {
+//                            startTime = startTime + iterator.next()
+//                        }
+//                        Log.d(Constants.TAG, startTime)
+//                        val startDate = dateFormat.parse(startTime)
+//                        val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
+//                        Log.d(Constants.TAG, timeStamp)
+//                        var endTime = iterator.next().substring(6)
+//                        if (endTime.length < 14) {
+//                            endTime = endTime + iterator.next()
+//                        }
+//                        val endDate = dateFormat.parse(endTime)
+//                        eventsRef.add(
+//                            Event(
+//                                name,
+//                                location,
+//                                timeStamp,
+//                                Timestamp(startDate),
+//                                Timestamp(endDate),
+//                                false,
+//                                0,
+//                                Event.EventType.CourseEvent
+//                            )
+//                        )
+//                        Log.d(Constants.TAG, "course added")
+//                    }
+//                }
+//                Log.d("!!!", "test:")
             }
             else -> {
                 Log.d("!!!", "not match")
@@ -480,6 +519,51 @@ class MainActivity : AppCompatActivity()
         chooseBuilder.hide()
 
     }
+
+
+    /**
+     * 打开文件
+     * @param file
+     */
+    private fun openFile(file: File) {
+
+        val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        //设置intent的Action属性
+        intent.action = Intent.ACTION_VIEW
+        //获取文件file的MIME类型
+        val type = "text/calendar"
+        //设置intent的data和Type属性。
+        intent.setDataAndType(/*uri*/Uri.fromFile(file), type)
+        //跳转
+        startActivity(intent)
+
+    }
+
+
+//    /**
+//     * 根据文件后缀名获得对应的MIME类型。
+//     * @param file
+//     */
+//    private fun getMIMEType(file: File): String {
+//
+//        var type = "*/*"
+//        val fName = file.getName()
+//        //获取后缀名前的分隔符"."在fName中的位置。
+//        val dotIndex = fName.lastIndexOf(".")
+//        if (dotIndex < 0) {
+//            return type
+//        }
+//        /* 获取文件的后缀名 */
+//        val end = fName.substring(dotIndex, fName.length).toLowerCase()
+//        if (end === "") return type
+//        //在MIME和文件类型的匹配表中找到对应的MIME类型。
+//        for (i in 0 until MIME_MapTable.length) { //MIME_MapTable??在这里你一定有疑问，这个MIME_MapTable是什么？
+//            if (end == MIME_MapTable[i][0])
+//                type = MIME_MapTable[i][1]
+//        }
+//        return type
+//    }
 
 
 }

@@ -5,7 +5,7 @@
     <string name="default_user_name">User Name</string>
     <string name="user_password">User Password</string>
     <string name="login_string">Login</string>
-    <string name="rosechecker">Rose Checker</string>
+    <string name="rosechecker">Rose\nChecker</string>
     <string name="date_time">Date</string>
     <string name="event_name">Event Name</string>
     <string name="time">Time</string>

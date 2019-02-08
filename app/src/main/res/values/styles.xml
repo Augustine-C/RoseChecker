@@ -20,5 +20,32 @@
         <item name="android:textColorPrimary">@color/colorAccent</item>
         <item name="android:colorControlNormal" tools:targetApi="lollipop">@color/colorAccent</item>
     </style>
+    <style name="rose_checke">
+
+        <item name="android:textSize">
+            64sp
+        </item>
+
+        <item name="android:textColor">
+            #800000
+        </item>
+
+        <item name="android:shadowColor">
+            #40000000
+        </item>
+
+        <item name="android:shadowDx">
+            0
+        </item>
+
+        <item name="android:shadowDy">
+            4
+        </item>
+
+        <item name="android:shadowRadius">
+            4
+        </item>
+
+    </style>
 
 </resources>
