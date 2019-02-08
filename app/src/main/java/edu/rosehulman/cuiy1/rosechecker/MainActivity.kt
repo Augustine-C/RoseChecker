@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity()
     private var uid: String = ""
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity()
                 Utils.isAll = false
                 onDateChange(calendarDate, uid)
             }
-            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL,"ALL",{dialog, which ->
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "ALL", { dialog, which ->
                 date_id.text = "ALL EVENTS"
                 fab.show()
                 val ft = supportFragmentManager.beginTransaction()
@@ -233,7 +232,7 @@ class MainActivity : AppCompatActivity()
                 builder.setTitle("click_test")
                 builder.create().show()
             }
-            R.id.delete ->{
+            R.id.delete -> {
 
             }
             R.id.logout -> {
@@ -244,54 +243,37 @@ class MainActivity : AppCompatActivity()
 //                val icalParser = ICALParser(this.resources.openRawResource(R.raw.cuiy1))
 //                val outputStream = FileOutputStream("temp.ics")
                 val icsInput = assets.open("chenx6.ics")
-                val br = BufferedReader(InputStreamReader(icsInput, "UTF-8"))
-                val iterator = br.lineSequence().iterator()
-                while(iterator.hasNext()) {
+                val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss")
+                val reader = icsInput.bufferedReader()
+                val iterator = reader.lines().iterator()
+               while (iterator.hasNext()) {
                     val line = iterator.next()
-                    if(line.equals("BEGIN:VEVENT")){
-                        val name=iterator.next().substring(8)
+                    if (line.equals("BEGIN:VEVENT")) {
+                        val name = iterator.next().substring(8)
                         iterator.next()
 //                        professor name
-                        val location = iterator.next().substring(10)
-                        val startTime=iterator. next().substring(8)
-                        val localStartDate = LocalDate.parse(startTime, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss" ))
-                        val startDate = Date.from(localStartDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        val location = iterator.next().substring(9)
+                        var startTime = iterator.next().substring(8)
+                        if(startTime.length<14){
+                            startTime=startTime+iterator.next()
+                        }
+                        Log.d(Constants.TAG,startTime)
+                        val startDate=dateFormat.parse(startTime)
                         val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
-                        val endTime=iterator. next().substring(6)
-                        val localEndDate = LocalDate.parse(endTime, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"))
-                        val endDate = Date.from(localEndDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                        eventsRef.add(Event(name,location,timeStamp, Timestamp(startDate),Timestamp(endDate)))
+                        Log.d(Constants.TAG,timeStamp)
+                        var endTime = iterator.next().substring(6)
+                        if(endTime.length<14){
+                            endTime=endTime+iterator.next()
+                        }
+                        val endDate=dateFormat.parse(endTime)
+                        eventsRef.add(Event(name, location, timeStamp, Timestamp(startDate), Timestamp(endDate), false,0,Event.EventType.CourseEvent))
+                        Log.d(Constants.TAG,"course added")
                     }
                 }
-                br.close()
-                var s: String? = null
-                try {
-                    s = IOUtils.toString(icsInput)
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-
-                IOUtils.closeQuietly(icsInput)
-                Log.d("!!!!!",s)
-
-
-//                icsInput.use { icsInput ->
-//                    outputStream.use { outputStream ->
-//                        icsInput.copyTo(outputStream)
-//                    }
-//                }
-//                val ics = FileInputStream("temp.ics")
-//                val calendarBuilder = CalendarBuilder()
-//                val calendar = calendarBuilder.build(icsInput)
-//                for(com in calendar.components){
-//                    Log.d("!!!!!!!", "componemts: $com")
-//                }
-
                 Log.d("!!!", "test:")
-
             }
             else -> {
-                Log.d("!!!","not match")
+                Log.d("!!!", "not match")
             }
         }
         main_content.closeDrawer(GravityCompat.START)
