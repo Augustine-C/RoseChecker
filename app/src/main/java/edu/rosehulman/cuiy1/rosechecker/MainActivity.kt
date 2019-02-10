@@ -277,8 +277,7 @@ class MainActivity : AppCompatActivity()
                 }
                 builder.setNegativeButton(android.R.string.cancel, null)
                 builder.create().show()
-//                https://prodwebxe-hv.rose-hulman.edu/regweb
-
+//              https://prodwebxe-hv.rose-hulman.edu/regweb
             }
             else -> {
                 Log.d("!!!", "not match")
