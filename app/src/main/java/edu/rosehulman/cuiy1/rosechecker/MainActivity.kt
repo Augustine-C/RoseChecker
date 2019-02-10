@@ -218,6 +218,12 @@ class MainActivity : AppCompatActivity()
         fab.show()
         buttons.visibility = View.VISIBLE
         date_id.visibility = View.VISIBLE
+        val nextid = eventsRef
+            .orderBy("startTime")
+            .whereGreaterThanOrEqualTo("startTime",Timestamp(currentTime)).limit(1)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                Utils.upcomingEvent = Event.fromSnapshot(querySnapshot!!.documents[0])
+            }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()

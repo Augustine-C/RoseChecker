@@ -62,6 +62,9 @@ class ScheduleAdapter(var context: Context?, var date: Date,var uid:String) : Re
     private fun processSnapshotDiff(snapshot: QuerySnapshot) {
         for (documentChange in snapshot.documentChanges) {
             val event = Event.fromSnapshot(documentChange.document)
+            if(event.id == Utils.upcomingEvent.id){
+                event.importance = 10
+            }
             when (documentChange.type) {
                 DocumentChange.Type.ADDED -> {
                     Log.d("!!!", "ADDED")

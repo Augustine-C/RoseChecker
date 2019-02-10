@@ -1,8 +1,10 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.event_holder.view.*
+import org.apache.log4j.lf5.util.Resource
 
 class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : RecyclerView.ViewHolder(itemView) {
     init {
@@ -19,6 +21,9 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
         itemView.event_datemonth.text=eventTime.startMonth
         itemView.event_dateday.text=eventTime.startDay
         itemView.event_location.text = event.location
+        if(event.importance == 10){
+            itemView.background = adapter.context!!.getDrawable(R.drawable.card_view_back)
+        }
     }
 
     fun processTime(time: Int): String {

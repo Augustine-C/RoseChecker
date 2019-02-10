@@ -9,6 +9,7 @@ object Utils {
     val MONTH = arrayListOf<String>("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
     val WEEKDAY = arrayListOf<String>("SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY")
     var isAll = false
+    lateinit var upcomingEvent : Event
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()
@@ -82,6 +83,7 @@ object Utils {
                     Event.EventType.CourseEvent
                 )
                 event.courseInfo.put("keyContent", profname)
+                event.courseInfo.put("source","online")
                 events.add(
                     event
                 )
