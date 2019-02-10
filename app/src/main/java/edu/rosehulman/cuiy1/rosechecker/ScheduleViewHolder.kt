@@ -21,7 +21,7 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
         itemView.event_datemonth.text=eventTime.startMonth
         itemView.event_dateday.text=eventTime.startDay
         itemView.event_location.text = event.location
-        if(event.importance == 10){
+        if(event.id == Utils.upcomingEvent.id){
             itemView.background = adapter.context!!.getDrawable(R.drawable.card_view_back)
         }
     }
