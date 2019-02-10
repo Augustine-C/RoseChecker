@@ -270,52 +270,14 @@ class MainActivity : AppCompatActivity()
             }
             R.id.download -> {
                 checkPermissions()
-                val icsInput = this.resources.openRawResource(R.raw.cuiy1)
-                val events = Utils.convertFromImputStream(icsInput)
-                for (event in events) {
-                    eventsRef.add(event)
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Do You Want to Go Rose Page and Download Calendar")
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
+                    openWebPage("https://prodwebxe-hv.rose-hulman.edu/regweb")
                 }
-
-//                val icsInput = assets.open("chenx6.ics")
-//                val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss")
-//                val reader = icsInput.bufferedReader()
-//                val iterator = reader.lines().iterator()
-//                while (iterator.hasNext()) {
-//                    val line = iterator.next()
-//                    if (line.equals("BEGIN:VEVENT")) {
-//                        val name = iterator.next().substring(8)
-//                        iterator.next()
-////                        professor name
-//                        val location = iterator.next().substring(9)
-//                        var startTime = iterator.next().substring(8)
-//                        if (startTime.length < 14) {
-//                            startTime = startTime + iterator.next()
-//                        }
-//                        Log.d(Constants.TAG, startTime)
-//                        val startDate = dateFormat.parse(startTime)
-//                        val timeStamp = "${startDate.year}${startDate.month}${startDate.date}"
-//                        Log.d(Constants.TAG, timeStamp)
-//                        var endTime = iterator.next().substring(6)
-//                        if (endTime.length < 14) {
-//                            endTime = endTime + iterator.next()
-//                        }
-//                        val endDate = dateFormat.parse(endTime)
-//                        eventsRef.add(
-//                            Event(
-//                                name,
-//                                location,
-//                                timeStamp,
-//                                Timestamp(startDate),
-//                                Timestamp(endDate),
-//                                false,
-//                                0,
-//                                Event.EventType.CourseEvent
-//                            )
-//                        )
-//                        Log.d(Constants.TAG, "course added")
-//                    }
-//                }
-//                Log.d("!!!", "test:")
+                builder.setNegativeButton(android.R.string.cancel, null)
+                builder.create().show()
+//              https://prodwebxe-hv.rose-hulman.edu/regweb
             }
             else -> {
                 Log.d("!!!", "not match")
@@ -325,6 +287,11 @@ class MainActivity : AppCompatActivity()
         return true
     }
 
+    fun openWebPage(url: String) {
+        val webpage: Uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, webpage)
+        startActivity(intent)
+    }
 
     private fun checkPermissions() {
         // Check to see if we already have permissions
