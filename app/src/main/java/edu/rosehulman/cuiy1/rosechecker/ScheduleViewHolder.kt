@@ -1,5 +1,6 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -22,7 +23,7 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
         itemView.event_dateday.text=eventTime.startDay
         itemView.event_location.text = event.location
         if(event.id == Utils.upcomingEvent.id){
-            itemView.background = adapter.context!!.getDrawable(R.drawable.card_view_back)
+            itemView.setBackgroundColor(Color.RED)
         }
     }
 
