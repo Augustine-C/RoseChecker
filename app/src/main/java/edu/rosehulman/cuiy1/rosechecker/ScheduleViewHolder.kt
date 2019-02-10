@@ -23,7 +23,9 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
         itemView.event_dateday.text=eventTime.startDay
         itemView.event_location.text = event.location
         if(event.id == Utils.upcomingEvent.id){
-            itemView.setBackgroundColor(Color.RED)
+            itemView.setBackgroundColor(ContextCompat.getColor(adapter.context!!,R.color.colorRoseRed))
+        } else {
+            itemView.setBackgroundColor(Color.WHITE)
         }
     }
 

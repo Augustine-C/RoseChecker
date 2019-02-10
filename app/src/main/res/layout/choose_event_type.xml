@@ -18,12 +18,6 @@
     <Button android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/choose_normalEvent"
-            android:text="@string/normal_event"
-    />
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:id="@+id/choose_meetingEvent"
             android:text="@string/meeting_event"
     />

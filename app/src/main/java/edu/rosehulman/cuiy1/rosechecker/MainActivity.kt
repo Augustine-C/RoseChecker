@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity()
                 onDateChange(calendarDate, uid)
             }
             datePickerDialog.setButton(DatePickerDialog.BUTTON_NEUTRAL, "ALL", { dialog, which ->
-                date_id.text = "ALL EVENTS"
+                toolbar.title = "ALL EVENTS"
                 fab.show()
                 val ft = supportFragmentManager.beginTransaction()
                 ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(currentTime, uid!!), "schedule")
@@ -137,7 +137,6 @@ class MainActivity : AppCompatActivity()
         fab.hide()
         buttons.visibility = View.GONE
         toolbar.visibility = View.GONE
-        date_id.visibility = View.GONE
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, LoginFragment(), "login")
         ft.commit()
@@ -151,8 +150,9 @@ class MainActivity : AppCompatActivity()
         fab.show()
         buttons.visibility = View.VISIBLE
         toolbar.visibility = View.VISIBLE
-        date_id.visibility = View.VISIBLE
-        date_id.text = String.format("%s/%s/%s ", currentTime.year, currentTime.month, currentTime.date)
+//        date_id.visibility = View.VISIBLE
+//        date_id.text =
+        toolbar.title = String.format("%s/%s/%s ", currentTime.year, currentTime.month, currentTime.date)
         eventsRef = FirebaseFirestore.getInstance().collection(Constants.USERS_COLLECTION).document(uid)
             .collection(Constants.EVENTS_COLLECTION)
         onDateChange(currentTime, uid)
@@ -206,18 +206,18 @@ class MainActivity : AppCompatActivity()
         val view = LayoutInflater.from(this).inflate(R.layout.choose_event_type, null, false)
         builder.setView(view)
         val bu = builder.create()
-        view.choose_normalEvent.setOnClickListener { showAddCourseDialog(bu) }
         view.choose_courseEvent.setOnClickListener { showAddCourseDialog(bu) }
         view.choose_meetingEvent.setOnClickListener { showAddMeetingDialog(bu) }
         bu.show()
     }
 
     override fun onDateChange(time: Date, uid: String) {
-        date_id.text =
-            "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
+        toolbar.title = "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
+//        date_id.text =
+//            "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
         fab.show()
         buttons.visibility = View.VISIBLE
-        date_id.visibility = View.VISIBLE
+//        date_id.visibility = View.VISIBLE
         val nextid = eventsRef
             .orderBy("startTime")
             .whereGreaterThanOrEqualTo("startTime",Timestamp(currentTime)).limit(1)

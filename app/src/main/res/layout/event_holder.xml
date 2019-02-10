@@ -11,8 +11,7 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:padding="4dp"
-        android:elevation="5dp"
-        app:cardCornerRadius="@dimen/fab_margin">
+        android:elevation="5dp">
     <LinearLayout
 
             android:layout_width="match_parent"
@@ -21,22 +20,22 @@
             tools:showIn="@layout/activity_main"
             android:orientation="horizontal"
             tools:context=".MainActivity">
-        <LinearLayout android:layout_width="100dp"
+        <LinearLayout android:layout_width="98dp"
                       android:layout_height="wrap_content"
                       android:orientation="vertical"
                       android:layout_gravity="center"
         >
-        <TextView
-                android:layout_width = "wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Jun"
-                android:textColor="@android:color/black"
-                android:textSize="30sp"
-                android:layout_gravity="center"
-                android:id="@+id/event_datemonth"
-                android:textStyle="bold"
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Jun"
+                    android:textColor="@android:color/black"
+                    android:textSize="30sp"
+                    android:layout_gravity="center"
+                    android:id="@+id/event_datemonth"
+                    android:textStyle="bold"
 
-        />
+            />
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
