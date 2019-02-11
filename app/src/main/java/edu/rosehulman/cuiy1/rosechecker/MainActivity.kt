@@ -1,8 +1,7 @@
 package edu.rosehulman.cuiy1.rosechecker
 
-import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -70,7 +69,6 @@ class MainActivity : AppCompatActivity()
         main_content.addDrawerListener(toggle)
         toggle.syncState()
         nav_bar.setNavigationItemSelectedListener(this)
-
         fab.setOnClickListener {
             showChooseDialog()
         }
@@ -108,7 +106,6 @@ class MainActivity : AppCompatActivity()
         Log.d("!!!", df.format(date) + date.time)
 
         checkPermissions()
-
 
 
     }
@@ -212,18 +209,34 @@ class MainActivity : AppCompatActivity()
     }
 
     override fun onDateChange(time: Date, uid: String) {
-        toolbar.title = "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
-//        date_id.text =
-//            "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
+        toolbar.title =
+                "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
         fab.show()
         buttons.visibility = View.VISIBLE
-//        date_id.visibility = View.VISIBLE
         val nextid = eventsRef
             .orderBy("startTime")
-            .whereGreaterThanOrEqualTo("startTime",Timestamp(currentTime)).limit(1)
+            .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 Utils.upcomingEvent = Event.fromSnapshot(querySnapshot!!.documents[0])
+                val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
+                val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
+                val triggerTime = Utils.upcomingEvent.startTime!!.toDate().time - 1800000
+
+                if (!Utils.upcomingEvent.alarmSet) {
+                    alarmMgr.set(
+                        AlarmManager.RTC_WAKEUP,
+                        triggerTime,
+                        pIntent
+                    )
+                    val temp = Utils.upcomingEvent
+                    temp.alarmSet=true
+                    eventsRef.document(temp.id).set(temp)
+                    Log.d(Constants.TAG, "${Utils.upcomingEvent.name} alarm set")
+                }
+
             }
+
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
@@ -235,16 +248,16 @@ class MainActivity : AppCompatActivity()
                 val events = Utils.convertFromImputStream(fs)
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Adding ${events.size} events to your calendar")
-                builder.setNegativeButton("cancel",{dialog, which ->
+                builder.setNegativeButton("cancel", { dialog, which ->
                 })
-                builder.setPositiveButton("OK",{dialog, which ->
-                    for(event in events){
+                builder.setPositiveButton("OK", { dialog, which ->
+                    for (event in events) {
                         eventsRef.add(event)
                     }
                 })
                 builder.create().show()
             } catch (e: Exception) {
-                Log.e("error",e.toString())
+                Log.e("error", e.toString())
             }
             intent.setData(null)
         }

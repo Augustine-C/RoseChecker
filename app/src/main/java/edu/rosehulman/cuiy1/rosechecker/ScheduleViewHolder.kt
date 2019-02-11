@@ -27,6 +27,7 @@ class ScheduleViewHolder(itemView: View, val adapter: ScheduleAdapter) : Recycle
         } else {
             itemView.setBackgroundColor(Color.WHITE)
         }
+
     }
 
     fun processTime(time: Int): String {

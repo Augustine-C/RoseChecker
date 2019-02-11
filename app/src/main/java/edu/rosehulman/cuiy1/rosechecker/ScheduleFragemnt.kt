@@ -1,13 +1,22 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat.getSystemService
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import java.util.*
+import android.support.v4.content.ContextCompat.getSystemService
+
+
 
 
 private const val ARG_YEAR = "year"
@@ -31,6 +40,16 @@ class ScheduleFragemnt : Fragment() {
             adapter = ScheduleAdapter(activity, Date(year!!, month!!, date!!, 0, 0, 0), uid!!)
             adapter!!.addSnapshotListener()
         }
+
+//        val alarmMgr = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val broadcastIntent = Intent(activity, AlarmBroadcastReceiver::class.java)
+//        val pIntent = PendingIntent.getBroadcast(activity,0,broadcastIntent,0)
+//        alarmMgr.set(
+//            AlarmManager.RTC_WAKEUP,
+//            Utils.upcomingEvent.startTime!!.toDate().time-1800000,
+//            pIntent
+//        )
+//        Log.d(Constants.TAG,"alarm set")
     }
 
     override fun onCreateView(
