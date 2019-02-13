@@ -331,6 +331,9 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
 
     fun remove(position: Int) {
         eventsRef.document(events[position].id).delete()
+        if(Utils.upcomingEvent != null && events[position].id == Utils.upcomingEvent!!.id) {
+            Utils.upcomingEvent = null
+        }
     }
 
     override fun onBindViewHolder(holder: ScheduleViewHolder, position: Int) {

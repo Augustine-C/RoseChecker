@@ -4,12 +4,14 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import java.io.InputStream
 import java.text.SimpleDateFormat
+import java.util.*
 
 object Utils {
     val MONTH = arrayListOf<String>("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
     val WEEKDAY = arrayListOf<String>("SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY")
     var isAll = false
     var upcomingEvent : Event? = null
+    var timer = Timer()
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()

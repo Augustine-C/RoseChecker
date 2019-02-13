@@ -106,6 +106,7 @@ class MainActivity : AppCompatActivity()
         Log.d("!!!", df.format(date) + date.time)
 
         checkPermissions()
+        check()
 
 
     }
@@ -210,30 +211,9 @@ class MainActivity : AppCompatActivity()
 
     override fun onDateChange(time: Date, uid: String) {
         toolbar.title =
-                "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
+            "${calendarDate.year + 1900}/${calendarDate.month + 1}/${calendarDate.date} ${Utils.WEEKDAY[calendarDate.day]}"
         fab.show()
         buttons.visibility = View.VISIBLE
-        val nextid = eventsRef
-            .orderBy("startTime")
-            .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
-            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-
-                val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
-                if (Utils.upcomingEvent == null || temp.id != Utils.upcomingEvent!!.id) {
-                    Utils.upcomingEvent= temp
-                    val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
-                    val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
-                    val triggerTime = Utils.upcomingEvent!!.startTime!!.toDate().time - 1800000
-                    val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                        alarmMgr.set(
-                            AlarmManager.RTC_WAKEUP,
-                            triggerTime,
-                            pIntent
-                        )
-                        Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
-//                    }
-                }
-            }
 
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
@@ -259,6 +239,7 @@ class MainActivity : AppCompatActivity()
             }
             intent.setData(null)
         }
+
 
 
     }
@@ -504,50 +485,46 @@ class MainActivity : AppCompatActivity()
 
     }
 
+    fun check() {
+        Utils.timer.schedule(kotlin.concurrent.timerTask {
+            try {
+                checkUpcomingEvent()
+            } catch (e: java.lang.Exception) {
 
-    /**
-     * 打开文件
-     * @param file
-     */
-    private fun openFile(file: File) {
-
-        val intent = Intent()
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        //设置intent的Action属性
-        intent.action = Intent.ACTION_VIEW
-        //获取文件file的MIME类型
-        val type = "text/calendar"
-        //设置intent的data和Type属性。
-        intent.setDataAndType(/*uri*/Uri.fromFile(file), type)
-        //跳转
-        startActivity(intent)
-
+            }
+        }, 0, 1000)
     }
 
+    fun checkUpcomingEvent() {
+        val nextid = eventsRef
+            .orderBy("startTime")
+            .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
 
-//    /**
-//     * 根据文件后缀名获得对应的MIME类型。
-//     * @param file
-//     */
-//    private fun getMIMEType(file: File): String {
-//
-//        var type = "*/*"
-//        val fName = file.getName()
-//        //获取后缀名前的分隔符"."在fName中的位置。
-//        val dotIndex = fName.lastIndexOf(".")
-//        if (dotIndex < 0) {
-//            return type
-//        }
-//        /* 获取文件的后缀名 */
-//        val end = fName.substring(dotIndex, fName.length).toLowerCase()
-//        if (end === "") return type
-//        //在MIME和文件类型的匹配表中找到对应的MIME类型。
-//        for (i in 0 until MIME_MapTable.length) { //MIME_MapTable??在这里你一定有疑问，这个MIME_MapTable是什么？
-//            if (end == MIME_MapTable[i][0])
-//                type = MIME_MapTable[i][1]
-//        }
-//        return type
-//    }
+                val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
+                if (Utils.upcomingEvent == null || temp.id != Utils.upcomingEvent!!.id) {
+                    if(Utils.upcomingEvent != null){
+                        Utils.upcomingEvent!!.isFinished = false
+                        eventsRef.document(Utils.upcomingEvent!!.id).set(Utils.upcomingEvent!!)
+                    }
+                    Utils.upcomingEvent = temp
+                    temp.isFinished = true
+                    eventsRef.document(temp.id).set(temp)
+                    val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
+                    val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
+                    val triggerTime = Utils.upcomingEvent!!.startTime!!.toDate().time - 1800000
+                    val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                    alarmMgr.set(
+                        AlarmManager.RTC_WAKEUP,
+                        triggerTime,
+                        pIntent
+                    )
+                    Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
+//                    }
+                }
+            }
+
+    }
 
 
 }
