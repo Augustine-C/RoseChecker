@@ -15,8 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import java.util.*
 import android.support.v4.content.ContextCompat.getSystemService
-
-
+import android.support.v7.widget.helper.ItemTouchHelper
 
 
 private const val ARG_YEAR = "year"
@@ -61,6 +60,23 @@ class ScheduleFragemnt : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
+        val mIth = ItemTouchHelper(
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.RIGHT
+            ) { override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPos = viewHolder.adapterPosition
+                val toPos = target.adapterPosition
+                return true
+            }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    adapter!!.remove(viewHolder.adapterPosition)
+                }
+            })
+        mIth.attachToRecyclerView(recyclerView)
         return recyclerView
     }
 

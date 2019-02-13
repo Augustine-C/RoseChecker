@@ -23,6 +23,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
             .setContentTitle("Alarm Manager")
             .setContentText("${Utils.upcomingEvent!!.name} will start in 30 minutes")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
         am.notify(id.toInt(), mBuilder.build())
         Log.d(Constants.TAG,"${id.toInt()} ALARM")
     }

@@ -4,6 +4,9 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 
@@ -218,6 +221,12 @@ class MainActivity : AppCompatActivity()
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
+        if(intent.action==Constants.INTENT_ACTION){
+            intent.action=""
+            calendarDate.time = Utils.upcomingEvent!!.startTime!!.toDate().time
+            Utils.isAll = false
+            onDateChange(Utils.upcomingEvent!!.startTime!!.toDate(),uid!!)
+        }
         if (intent.type == "text/calendar") {
             Log.d("!!!!", "access test")
             try {
@@ -519,6 +528,13 @@ class MainActivity : AppCompatActivity()
                         triggerTime,
                         pIntent
                     )
+                    val shortcutManager = getSystemService<ShortcutManager>(ShortcutManager::class.java)
+                    val shortcut = ShortcutInfo.Builder(this, "id1")
+                        .setShortLabel("Upcoming")
+                        .setLongLabel("${Utils.upcomingEvent!!.name}")
+                        .setIntent(intent.setAction(Constants.INTENT_ACTION))
+                        .build()
+                    shortcutManager!!.dynamicShortcuts = Arrays.asList(shortcut)
                     Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
 //                    }
                 }
