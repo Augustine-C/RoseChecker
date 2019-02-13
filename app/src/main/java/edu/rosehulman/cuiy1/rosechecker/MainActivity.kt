@@ -257,15 +257,15 @@ class MainActivity : AppCompatActivity()
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Log.d("!!!!!", item.itemId.toString())
         when (item.itemId) {
-            R.id.color -> {
-                Log.d("!!!", "color selected")
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("click_test")
-                builder.create().show()
-            }
-            R.id.delete -> {
-
-            }
+//            R.id.color -> {
+//                Log.d("!!!", "color selected")
+//                val builder = AlertDialog.Builder(this)
+//                builder.setTitle("click_test")
+//                builder.create().show()
+//            }
+//            R.id.delete -> {
+//
+//            }
             R.id.logout -> {
                 auth.signOut()
             }
@@ -529,12 +529,15 @@ class MainActivity : AppCompatActivity()
                         pIntent
                     )
                     val shortcutManager = getSystemService<ShortcutManager>(ShortcutManager::class.java)
-                    val shortcut = ShortcutInfo.Builder(this, "id1")
-                        .setShortLabel("Upcoming")
-                        .setLongLabel("${Utils.upcomingEvent!!.name}")
-                        .setIntent(intent.setAction(Constants.INTENT_ACTION))
-                        .build()
-                    shortcutManager!!.dynamicShortcuts = Arrays.asList(shortcut)
+                    if(Utils.upcomingEvent!! != null) {
+                        val shortcut = ShortcutInfo.Builder(this, "id1")
+                            .setShortLabel("Upcoming")
+                            .setLongLabel("${Utils.upcomingEvent!!.name}")
+                            .setIntent(intent.setAction(Constants.INTENT_ACTION))
+                            .setIcon(Icon.createWithResource(this,R.drawable.date))
+                            .build()
+                        shortcutManager!!.dynamicShortcuts = Arrays.asList(shortcut)
+                    }
                     Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
 //                    }
                 }

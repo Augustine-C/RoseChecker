@@ -7,7 +7,7 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.app.NotificationChannel
-
+import java.util.*
 
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
@@ -15,16 +15,15 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         // Create the notification to be shown
         val am = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val id = Utils.upcomingEvent!!.startTime!!.toDate().time/1000
-        val mChannel = NotificationChannel(id.toString(),"Channel Name",NotificationManager.IMPORTANCE_HIGH)
+        val id = Utils.upcomingEvent!!.startTime!!.toDate().time / 1000
+        val mChannel = NotificationChannel(id.toString(), "Channel Name", NotificationManager.IMPORTANCE_HIGH)
         am.createNotificationChannel(mChannel)
-        val mBuilder = NotificationCompat.Builder(context,id.toString())
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle("Alarm Manager")
-            .setContentText("${Utils.upcomingEvent!!.name} will start in 30 minutes")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+        val mBuilder = NotificationCompat.Builder(context, id.toString())
+            .setSmallIcon(R.mipmap.rose_icon_round)
+            .setContentTitle("Upcoming Event")
+            .setContentText("${Utils.upcomingEvent!!.name} will start in ${(Utils.upcomingEvent!!.startTime!!.toDate().time - Calendar.getInstance().time.time).toInt() / 60000} minutes")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
         am.notify(id.toInt(), mBuilder.build())
-        Log.d(Constants.TAG,"${id.toInt()} ALARM")
+        Log.d(Constants.TAG, "${id.toInt()} ALARM")
     }
 }

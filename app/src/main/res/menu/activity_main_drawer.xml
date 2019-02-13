@@ -7,14 +7,14 @@
                 android:icon="@drawable/download"
                 android:title="@string/download"
         />
-        <item
-                android:id="@+id/delete"
-                android:icon="@drawable/delete"
-                android:title="@string/delete" />
-        <item
-                android:id="@+id/color"
-                android:icon="@drawable/color"
-                android:title="@string/color" />
+        <!--<item-->
+                <!--android:id="@+id/delete"-->
+                <!--android:icon="@drawable/delete"-->
+                <!--android:title="@string/delete" />-->
+        <!--<item-->
+                <!--android:id="@+id/color"-->
+                <!--android:icon="@drawable/color"-->
+                <!--android:title="@string/color" />-->
         <!--<item-->
                 <!--android:id="@+id/share"-->
                 <!--android:icon="@drawable/share"-->
