@@ -217,24 +217,22 @@ class MainActivity : AppCompatActivity()
             .orderBy("startTime")
             .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                Utils.upcomingEvent = Event.fromSnapshot(querySnapshot!!.documents[0])
-                val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
-                val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
-                val triggerTime = Utils.upcomingEvent.startTime!!.toDate().time - 1800000
 
-                if (!Utils.upcomingEvent.alarmSet) {
-                    alarmMgr.set(
-                        AlarmManager.RTC_WAKEUP,
-                        triggerTime,
-                        pIntent
-                    )
-                    val temp = Utils.upcomingEvent
-                    temp.alarmSet=true
-                    eventsRef.document(temp.id).set(temp)
-                    Log.d(Constants.TAG, "${Utils.upcomingEvent.name} alarm set")
+                val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
+                if (Utils.upcomingEvent == null || temp.id != Utils.upcomingEvent!!.id) {
+                    Utils.upcomingEvent= temp
+                    val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
+                    val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
+                    val triggerTime = Utils.upcomingEvent!!.startTime!!.toDate().time - 1800000
+                    val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        alarmMgr.set(
+                            AlarmManager.RTC_WAKEUP,
+                            triggerTime,
+                            pIntent
+                        )
+                        Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
+//                    }
                 }
-
             }
 
         val ft = supportFragmentManager.beginTransaction()

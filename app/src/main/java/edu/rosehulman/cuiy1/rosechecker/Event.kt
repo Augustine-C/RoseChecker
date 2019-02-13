@@ -16,8 +16,7 @@ open class Event(
     var importance: Int = 0,
     var eventType: EventType = EventType.NormalEvent,
     var courseInfo: HashMap<String, String> = hashMapOf(),
-    var meetingInfo: HashMap<String, String> = hashMapOf(),
-    var alarmSet:Boolean=false
+    var meetingInfo: HashMap<String, String> = hashMapOf()
 
 
 ) {
