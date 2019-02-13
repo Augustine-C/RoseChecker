@@ -85,6 +85,7 @@ object Utils {
                     Event.EventType.CourseEvent
                 )
                 event.courseInfo.put("keyContent", profname)
+                event.courseInfo.put("homeWork", "")
                 event.courseInfo.put("source","online")
                 events.add(
                     event

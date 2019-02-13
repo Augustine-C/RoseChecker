@@ -35,6 +35,7 @@ import java.util.*
 import edu.rosehulman.rosefire.Rosefire
 import org.apache.commons.io.IOUtils
 import java.io.*
+import java.lang.IndexOutOfBoundsException
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -56,12 +57,15 @@ class MainActivity : AppCompatActivity()
     private val RC_SIGN_IN = 1
     private val RC_ROSEFIRE_LOGIN = 1001
     private var uid: String = ""
+    lateinit var shortcutManager : ShortcutManager
+    lateinit var alarmMgr : AlarmManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        shortcutManager = getSystemService<ShortcutManager>(ShortcutManager::class.java)
+        alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         currentTime = Calendar.getInstance().time
         calendarDate = currentTime.clone() as Date
@@ -498,7 +502,9 @@ class MainActivity : AppCompatActivity()
         Utils.timer.schedule(kotlin.concurrent.timerTask {
             try {
                 checkUpcomingEvent()
-            } catch (e: java.lang.Exception) {
+            } catch (e : Exception) {
+
+            } catch (e : IndexOutOfBoundsException){
 
             }
         }, 0, 1000)
@@ -509,6 +515,10 @@ class MainActivity : AppCompatActivity()
             .orderBy("startTime")
             .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if(querySnapshot == null || querySnapshot!!.isEmpty){
+                    return@addSnapshotListener
+
+                }
 
                 val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
                 if (Utils.upcomingEvent == null || temp.id != Utils.upcomingEvent!!.id) {
@@ -522,24 +532,29 @@ class MainActivity : AppCompatActivity()
                     val broadcastIntent = Intent(this, AlarmBroadcastReceiver::class.java)
                     val pIntent = PendingIntent.getBroadcast(this, 0, broadcastIntent, 0)
                     val triggerTime = Utils.upcomingEvent!!.startTime!!.toDate().time - 1800000
-                    val alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
                     alarmMgr.set(
                         AlarmManager.RTC_WAKEUP,
                         triggerTime,
                         pIntent
                     )
-                    val shortcutManager = getSystemService<ShortcutManager>(ShortcutManager::class.java)
                     if(Utils.upcomingEvent!! != null) {
-                        val shortcut = ShortcutInfo.Builder(this, "id1")
+                         val shortcut = ShortcutInfo.Builder(this, "id1")
                             .setShortLabel("Upcoming")
                             .setLongLabel("${Utils.upcomingEvent!!.name}")
-                            .setIntent(intent.setAction(Constants.INTENT_ACTION))
+                            .setIntent(Intent(this,MainActivity::class.java).setAction(Constants.INTENT_ACTION))
                             .setIcon(Icon.createWithResource(this,R.drawable.date))
                             .build()
-                        shortcutManager!!.dynamicShortcuts = Arrays.asList(shortcut)
+                        shortcutManager.dynamicShortcuts = Arrays.asList(shortcut)
+                    } else {
+                        shortcutManager.removeAllDynamicShortcuts()
                     }
                     Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
 //                    }
+                } else {
+                    if(Utils.upcomingEvent == null){
+                        shortcutManager.removeAllDynamicShortcuts()
+                    }
                 }
             }
 

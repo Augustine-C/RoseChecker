@@ -78,7 +78,9 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
                     Log.d("!!!", "REMOVE ${event.id}")
                     val pos = events.indexOfFirst { it.id == event.id }
                     if (pos != -1) {
+                        Utils.upcomingEvent = null
                         events.removeAt(pos)
+
                         notifyItemRemoved(pos)
                     }
 
@@ -179,7 +181,7 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
                             starting.hours = hourOfDay
                             starting.minutes = minute
                             starting.seconds = 0
-                        }, event.startTime!!.toDate().hours, event.startTime!!.toDate().hours, true)
+                        }, event.startTime!!.toDate().hours, event.startTime!!.toDate().minutes, true)
                     timePicker.show()
                 }
                 view.meetingEndTime.setOnClickListener {
