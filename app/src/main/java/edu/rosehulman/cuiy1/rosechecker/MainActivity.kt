@@ -26,6 +26,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.rosehulman.cuiy1.rosechecker.Utils.eventsRef
+import edu.rosehulman.cuiy1.rosechecker.Utils.upcomingEvent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity()
     , ScheduleFragemnt.OnDateChangeListener {
 
     private val WRITE_EXTERNAL_STORAGE_PERMISSION = 2
-    private lateinit var eventsRef: CollectionReference
+//    private lateinit var eventsRef: CollectionReference
     private lateinit var currentTime: Date
     lateinit var calendarDate: Date
     var starting = Calendar.getInstance().time
@@ -57,8 +59,8 @@ class MainActivity : AppCompatActivity()
     private val RC_SIGN_IN = 1
     private val RC_ROSEFIRE_LOGIN = 1001
     private var uid: String = ""
-    lateinit var shortcutManager : ShortcutManager
-    lateinit var alarmMgr : AlarmManager
+    lateinit var shortcutManager: ShortcutManager
+    lateinit var alarmMgr: AlarmManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -225,11 +227,11 @@ class MainActivity : AppCompatActivity()
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.fragment_contianer, ScheduleFragemnt.newInstance(time, uid!!), "schedule")
         ft.commit()
-        if(intent.action==Constants.INTENT_ACTION){
-            intent.action=""
+        if (intent.action == Constants.INTENT_ACTION) {
+            intent.action = ""
             calendarDate.time = Utils.upcomingEvent!!.startTime!!.toDate().time
             Utils.isAll = false
-            onDateChange(Utils.upcomingEvent!!.startTime!!.toDate(),uid!!)
+            onDateChange(Utils.upcomingEvent!!.startTime!!.toDate(), uid!!)
         }
         if (intent.type == "text/calendar") {
             Log.d("!!!!", "access test")
@@ -252,7 +254,6 @@ class MainActivity : AppCompatActivity()
             }
             intent.setData(null)
         }
-
 
 
     }
@@ -502,9 +503,9 @@ class MainActivity : AppCompatActivity()
         Utils.timer.schedule(kotlin.concurrent.timerTask {
             try {
                 checkUpcomingEvent()
-            } catch (e : Exception) {
+            } catch (e: Exception) {
 
-            } catch (e : IndexOutOfBoundsException){
+            } catch (e: IndexOutOfBoundsException) {
 
             }
         }, 0, 1000)
@@ -515,14 +516,16 @@ class MainActivity : AppCompatActivity()
             .orderBy("startTime")
             .whereGreaterThanOrEqualTo("startTime", Timestamp(currentTime)).limit(1)
             .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                if(querySnapshot == null || querySnapshot!!.isEmpty){
+                if (querySnapshot == null || querySnapshot!!.isEmpty) {
+                    upcomingEvent = null
+                    shortcutManager.removeAllDynamicShortcuts()
                     return@addSnapshotListener
 
                 }
 
                 val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
                 if (Utils.upcomingEvent == null || temp.id != Utils.upcomingEvent!!.id) {
-                    if(Utils.upcomingEvent != null){
+                    if (Utils.upcomingEvent != null) {
                         Utils.upcomingEvent!!.isFinished = false
                         eventsRef.document(Utils.upcomingEvent!!.id).set(Utils.upcomingEvent!!)
                     }
@@ -538,12 +541,12 @@ class MainActivity : AppCompatActivity()
                         triggerTime,
                         pIntent
                     )
-                    if(Utils.upcomingEvent!! != null) {
-                         val shortcut = ShortcutInfo.Builder(this, "id1")
+                    if (Utils.upcomingEvent!! != null) {
+                        val shortcut = ShortcutInfo.Builder(this, "id1")
                             .setShortLabel("Upcoming")
                             .setLongLabel("${Utils.upcomingEvent!!.name}")
-                            .setIntent(Intent(this,MainActivity::class.java).setAction(Constants.INTENT_ACTION))
-                            .setIcon(Icon.createWithResource(this,R.drawable.date))
+                            .setIntent(Intent(this, MainActivity::class.java).setAction(Constants.INTENT_ACTION))
+                            .setIcon(Icon.createWithResource(this, R.drawable.date))
                             .build()
                         shortcutManager.dynamicShortcuts = Arrays.asList(shortcut)
                     } else {
@@ -552,8 +555,8 @@ class MainActivity : AppCompatActivity()
                     Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
 //                    }
                 } else {
-                    if(Utils.upcomingEvent == null){
-                        shortcutManager.removeAllDynamicShortcuts()
+                    if (Utils.upcomingEvent == null) {
+
                     }
                 }
             }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.*
+import edu.rosehulman.cuiy1.rosechecker.Utils.eventsRef
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import java.util.*
@@ -19,11 +20,11 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
 
     var events = ArrayList<Event>()
     lateinit var registration: ListenerRegistration
-    private val eventsRef = FirebaseFirestore
-        .getInstance()
-        .collection(Constants.USERS_COLLECTION)
-        .document(uid)
-        .collection(Constants.EVENTS_COLLECTION)
+//    private val eventsRef = FirebaseFirestore
+//        .getInstance()
+//        .collection(Constants.USERS_COLLECTION)
+//        .document(uid)
+//        .collection(Constants.EVENTS_COLLECTION)
 
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events} $uid")

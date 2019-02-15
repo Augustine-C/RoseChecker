@@ -2,9 +2,11 @@ package edu.rosehulman.cuiy1.rosechecker
 
 import android.util.Log
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.CollectionReference
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 object Utils {
     val MONTH = arrayListOf<String>("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC")
@@ -12,6 +14,7 @@ object Utils {
     var isAll = false
     var upcomingEvent : Event? = null
     var timer = Timer()
+    lateinit var eventsRef : CollectionReference
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()
@@ -85,7 +88,7 @@ object Utils {
                     Event.EventType.CourseEvent
                 )
                 event.courseInfo.put("keyContent", profname)
-                event.courseInfo.put("homeWork", "")
+                event.courseInfo.put("homeWork", "Homework: ")
                 event.courseInfo.put("source","online")
                 events.add(
                     event
