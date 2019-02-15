@@ -520,7 +520,6 @@ class MainActivity : AppCompatActivity()
                     upcomingEvent = null
                     shortcutManager.removeAllDynamicShortcuts()
                     return@addSnapshotListener
-
                 }
 
                 val temp = Event.fromSnapshot(querySnapshot!!.documents[0])
@@ -553,11 +552,7 @@ class MainActivity : AppCompatActivity()
                         shortcutManager.removeAllDynamicShortcuts()
                     }
                     Log.d(Constants.TAG, "${Utils.upcomingEvent!!.name} alarm set")
-//                    }
                 } else {
-                    if (Utils.upcomingEvent == null) {
-
-                    }
                 }
             }
 

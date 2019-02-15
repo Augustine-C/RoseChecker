@@ -1,6 +1,9 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.app.Activity
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent.getActivity
 import android.app.TimePickerDialog
 import android.content.Context
 import android.support.v7.app.AlertDialog
@@ -14,17 +17,17 @@ import edu.rosehulman.cuiy1.rosechecker.Utils.eventsRef
 import kotlinx.android.synthetic.main.add_course_event.view.*
 import kotlinx.android.synthetic.main.add_meeting_event.view.*
 import java.util.*
+import android.content.Context.NOTIFICATION_SERVICE
+import android.support.v4.content.ContextCompat.getSystemService
+import android.app.NotificationManager
+
+
 
 class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
     RecyclerView.Adapter<ScheduleViewHolder>() {
 
     var events = ArrayList<Event>()
     lateinit var registration: ListenerRegistration
-//    private val eventsRef = FirebaseFirestore
-//        .getInstance()
-//        .collection(Constants.USERS_COLLECTION)
-//        .document(uid)
-//        .collection(Constants.EVENTS_COLLECTION)
 
     fun addSnapshotListener() {
         Log.d("!!!", "add snapshotlistener ${events} $uid")
@@ -60,6 +63,7 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
     }
 
     private fun processSnapshotDiff(snapshot: QuerySnapshot) {
+        val notifMgr = Activity.NOTIFICATION_SERVICE as NotificationManager
         for (documentChange in snapshot.documentChanges) {
             val event = Event.fromSnapshot(documentChange.document)
 //            if (event.id == Utils.upcomingEvent.id) {
@@ -81,7 +85,7 @@ class ScheduleAdapter(var context: Context?, var date: Date, var uid: String) :
                     if (pos != -1) {
                         Utils.upcomingEvent = null
                         events.removeAt(pos)
-
+                        notifMgr.cancel((events[pos].startTime!!.toDate().time / 1000).toInt())
                         notifyItemRemoved(pos)
                     }
 

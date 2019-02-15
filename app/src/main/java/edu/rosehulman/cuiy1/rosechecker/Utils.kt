@@ -1,5 +1,7 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
@@ -15,6 +17,7 @@ object Utils {
     var upcomingEvent : Event? = null
     var timer = Timer()
     lateinit var eventsRef : CollectionReference
+    val mChannel = NotificationChannel(Constants.CHANNEL, "Channel Name", NotificationManager.IMPORTANCE_HIGH)
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()

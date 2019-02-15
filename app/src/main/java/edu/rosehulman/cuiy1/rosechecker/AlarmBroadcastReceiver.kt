@@ -7,6 +7,7 @@ import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.app.NotificationChannel
+import edu.rosehulman.cuiy1.rosechecker.Utils.mChannel
 import java.util.*
 
 
@@ -16,7 +17,6 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         // Create the notification to be shown
         val am = context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val id = Utils.upcomingEvent!!.startTime!!.toDate().time / 1000
-        val mChannel = NotificationChannel(id.toString(), "Channel Name", NotificationManager.IMPORTANCE_HIGH)
         am.createNotificationChannel(mChannel)
         val mBuilder = NotificationCompat.Builder(context, id.toString())
             .setSmallIcon(R.mipmap.rose_icon_round)
