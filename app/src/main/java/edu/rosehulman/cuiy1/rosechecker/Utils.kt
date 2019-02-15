@@ -1,5 +1,7 @@
 package edu.rosehulman.cuiy1.rosechecker
 
+import android.app.Activity
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.util.Log
@@ -17,7 +19,9 @@ object Utils {
     var upcomingEvent : Event? = null
     var timer = Timer()
     lateinit var eventsRef : CollectionReference
-    val mChannel = NotificationChannel(Constants.CHANNEL, "Channel Name", NotificationManager.IMPORTANCE_HIGH)
+    lateinit var mChannel : NotificationChannel
+    lateinit var alarmMgr: AlarmManager
+    lateinit var notificationManager : NotificationManager
 
     fun timeStampToString(startTimeStamp: Timestamp, endTimestamp: Timestamp): EventTime {
         val start = startTimeStamp.toDate()

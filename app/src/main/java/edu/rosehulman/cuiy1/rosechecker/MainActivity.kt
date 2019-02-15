@@ -26,7 +26,9 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import edu.rosehulman.cuiy1.rosechecker.Utils.alarmMgr
 import edu.rosehulman.cuiy1.rosechecker.Utils.eventsRef
+import edu.rosehulman.cuiy1.rosechecker.Utils.mChannel
 import edu.rosehulman.cuiy1.rosechecker.Utils.upcomingEvent
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.add_course_event.view.*
@@ -60,7 +62,7 @@ class MainActivity : AppCompatActivity()
     private val RC_ROSEFIRE_LOGIN = 1001
     private var uid: String = ""
     lateinit var shortcutManager: ShortcutManager
-    lateinit var alarmMgr: AlarmManager
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,7 +70,9 @@ class MainActivity : AppCompatActivity()
         setContentView(R.layout.activity_main)
         shortcutManager = getSystemService<ShortcutManager>(ShortcutManager::class.java)
         alarmMgr = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
+        mChannel = NotificationChannel(Constants.CHANNEL, "upcoming events", NotificationManager.IMPORTANCE_HIGH)
+        Utils.notificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        Utils.notificationManager.createNotificationChannel(mChannel)
         currentTime = Calendar.getInstance().time
         calendarDate = currentTime.clone() as Date
         initializeListeners()
